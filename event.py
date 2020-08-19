@@ -1,3 +1,4 @@
+import math
 from datetime import datetime
 import constants
 
@@ -5,7 +6,11 @@ def next(ctx, settings):
     if is_event(settings) is False:
         return 'No event running'
     
-    difference = settings.start
+    difference = (datetime.utcnow() - settings.start_time).total_seconds()
+    event_iterations = math.floor(difference / 3600)
+    next_event = (settings.start_event + event_iterations) % 3
+    return f'Next event: {constants.EVENTS[next_event]}'
+
     return f'next executed: {settings.settings_file}'
 
 def is_event(settings):

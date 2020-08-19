@@ -32,6 +32,7 @@ async def do_tasks():
 
 if __name__ == '__main__':
     settings.parse_settings()
-    print(settings)
+    #print(settings)
+    #event.next(None, settings)
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
