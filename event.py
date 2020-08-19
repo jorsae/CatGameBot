@@ -38,3 +38,15 @@ def is_event(settings):
         if event.start_time <= now <= event.end_time:
             return True
     return False
+
+def get_next_event(settings):
+    now = datetime.utcnow()
+    next_event = None
+    for event in settings.event_times:
+        if event.start_time > now:
+            if next_event is None:
+                next_event = event.start_time
+            else:
+                if event.start_time < next_event:
+                    next_event = event.start_time
+    return next_event
