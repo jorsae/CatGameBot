@@ -26,7 +26,11 @@ def clean_iterations(iterations):
     if type(iterations) is not int:
         return 1
     else:
-        return iterations if iterations <= 10 else 10
+        if iterations > 10:
+            return 10
+        elif iterations < 0:
+            return 1
+        return iterations
 
 def is_event(settings):
     now = datetime.utcnow()
