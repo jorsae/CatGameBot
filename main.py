@@ -12,14 +12,15 @@ async def test(ctx, arg):
     await ctx.send(arg)
 
 @bot.command(name='next')
-async def next(ctx):
-    await ctx.send(event.next(ctx, settings))
+async def next(ctx, iterations=1):
+    await ctx.send(event.next(ctx, settings, iterations))
 
 @bot.event
 async def on_message(message: discord.Message):
     await bot.wait_until_ready()
     message.content = (
-        message.content.replace("—", "--")
+        message.content
+        .replace("—", "--")
         .replace("'", "′")
         .replace("‘", "′")
         .replace("’", "′")
@@ -33,6 +34,9 @@ async def do_tasks():
 if __name__ == '__main__':
     settings.parse_settings()
     #print(settings)
-    #event.next(None, settings)
+    # print(event.next(None, settings, ))
+    # print(event.next(None, settings, 3))
+    # print(event.next(None, settings, 13))
+    # print(event.next(None, settings, "asd"))
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
