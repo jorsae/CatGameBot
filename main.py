@@ -12,7 +12,7 @@ async def test(ctx, arg):
     await ctx.send(arg)
 
 @bot.command(name='next')
-async def next(ctx, iterations=1):
+async def next(ctx, iterations: str="1"):
     await ctx.send(event.next(ctx, settings, iterations))
 
 @bot.event
@@ -35,10 +35,10 @@ if __name__ == '__main__':
     settings.parse_settings()
     #print(settings)
     # print(event.get_next_event(settings))
-    print(event.is_event(settings))
+    # print(event.is_event(settings))
     # print(event.next(None, settings, 1))
     # print(event.next(None, settings, 3))
     # print(event.next(None, settings, 13))
     # print(event.next(None, settings, "asd"))
-    # bot.loop.create_task(do_tasks())
-    # bot.run(settings.token)
+    bot.loop.create_task(do_tasks())
+    bot.run(settings.token)

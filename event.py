@@ -18,32 +18,33 @@ def next(ctx, settings, iterations):
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
-    output = f'Next {iterations} event(s)\n'
+    output = f'**Next {iterations} event(s)**\n'
 
     # Event is currently ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
-        b = constants.SIX_HOURS - time_difference
+        time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
+        time_left = format_timedelta(timedelta(seconds=time_left))
         event = (next_event - 1) % 3
-        a = timedelta(seconds=b)
-        output += f'{constants.EVENTS[event]} ongoing. Time left: {a}\n'
+        output += f'{constants.EVENTS[event]} ongoing. Time left: {time_left}\n'
     
     for i in range(iterations):
-        time_left = i*constants.SIX_HOURS + time_difference
-        a = timedelta(seconds=time_left)
+        time_left = i * constants.SIX_HOURS + time_difference
+        time_left = format_timedelta(timedelta(seconds=time_left))
         event = (next_event + i) % 3
-        output += f'[{i+1}]: {constants.EVENTS[event]} in {a}\n'
+        output += f'[{i+1}]: {constants.EVENTS[event]} in {time_left}\n'
 
     return output
 
 def clean_iterations(iterations):
-    if type(iterations) is not int:
-        return 1
-    else:
+    try:
+        iterations = int(iterations)
         if iterations > 10:
             return 10
-        elif iterations < 0:
+        if iterations < 1:
             return 1
         return iterations
+    except:
+        return 1
 
 def is_event(settings):
     now = datetime.utcnow()
@@ -63,3 +64,18 @@ def get_next_event(settings):
                 if event.start_time < next_event:
                     next_event = event.start_time
     return next_event
+
+def format_timedelta(tdelta):
+    days = tdelta.days
+    hours, remainder = divmod(tdelta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    hours = f'0{hours}' if hours < 10 else hours
+    minutes = f'0{minutes}' if minutes < 10 else minutes
+    seconds = f'0{seconds}' if seconds < 10 else seconds
+
+    if days > 0:
+        dayPlural = "days" if days > 1 else "day"
+        return f'{days} {dayPlural}, {hours}:{minutes}:{seconds}'
+    else:
+        return f'{hours}:{minutes}:{seconds}'
