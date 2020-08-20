@@ -1,8 +1,9 @@
 import discord
+import math
 import asyncio
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from discord.ext import commands
 from settings import Settings
 import event
@@ -40,11 +41,14 @@ async def ping_reminder():
         if time_difference <= constants.WARNING_TIME:
             if event.is_event(settings):
                 event_iterations = math.floor(difference / constants.ONE_HOUR)
-                next_event = (settings.start_event + event_iterations) % 3
-                logging.info(f'Ping reminder: {constants.EVENTS[event]} | {event_iterations}, {next_event}')
+                next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
+                logging.info(f'Ping reminder: {constants.EVENTS[next_event]} | {event_iterations}, {next_event}, {time_difference}')
+                logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} | {constants.EVENTS[next_event]}')
+                channel = bot.get_channel(settings.channel_reminder)
+                await channel.send(f'{constants.EVENT_PINGS[next_event]} {constants.EVENTS[next_event]} in {event.format_timedelta(timedelta(seconds=time_difference))}')
             else:
                 logging.debug(f'No event is ongoing')
-                asyncio.sleep(constants.WARNING_TIME)
+            await asyncio.sleep(constants.WARNING_TIME)
         else:
             sleep_time = time_difference - constants.WARNING_TIME
             logging.info(f'Sleep time: {sleep_time}')

@@ -1,4 +1,5 @@
 EVENTS = ['1 min crafting', '5 min baskets', '5 min shop re-stock']
+EVENT_PINGS = ['<@&689721344455213139>', '<@&689721605680791584>', '<@&689721633837023260>'];
 ONE_HOUR = 3600
 SIX_HOURS = 21600
 EVENT_DURATION = 1800
