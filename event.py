@@ -1,3 +1,4 @@
+import discord
 import math
 from datetime import datetime, timedelta
 import constants
@@ -18,27 +19,28 @@ def next(ctx, settings, iterations):
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
-    output = f'**Next {iterations} event(s)**\n'
+    embed=discord.Embed(colour=discord.Colour.green())
+    embed.set_author(name=f'Next {iterations} event(s)')
     
     # Event is currently ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = format_timedelta(timedelta(seconds=time_left))
-        output += f'{constants.EVENTS[next_event]} ongoing. Time left: {time_left}\n'
+        embed.add_field(name=f'{constants.EVENTS[next_event]}', value=f'Time left: {time_left}')
     
     for i in range(iterations):
         time_left = i * constants.SIX_HOURS + time_difference
         time_left = format_timedelta(timedelta(seconds=time_left))
         event = (next_event + (i+1)) % 3
-        output += f'{constants.EVENTS[event]} in {time_left}\n'
+        embed.add_field(name=f'{constants.EVENTS[event]}', value=f'Time left: {time_left}')
 
-    return output
+    return embed
 
 def clean_iterations(iterations):
     try:
         iterations = int(iterations)
-        if iterations > 10:
-            return 10
+        if iterations > 9:
+            return 9
         if iterations < 1:
             return 1
         return iterations

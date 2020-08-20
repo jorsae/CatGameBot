@@ -13,10 +13,19 @@ settings = Settings('settings.json')
 bot = commands.Bot(command_prefix='!')
 bot.remove_command('help')
 
-@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 10 events. e.g: !next 5")
+@bot.command(name="test")
+async def test(ctx):
+    embed=discord.Embed(color=0x397e26)
+    embed.set_author(name="author")
+    embed.add_field(name="a", value="1", inline=False)
+    embed.add_field(name="b", value="2", inline=False)
+    embed.add_field(name="c", value="3", inline=False)
+    await ctx.send(embed=embed)
+
+@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
-    await ctx.send(event.next(ctx, settings, iterations))
+    await ctx.send(embed=event.next(ctx, settings, iterations))
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
