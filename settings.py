@@ -6,6 +6,7 @@ import logging
 class Settings():
     def __init__(self, settings_file):
         self.settings_file = settings_file
+        self.admin = None
         self.channel_reminder = None
         self.token = None
         self.event_times = []
@@ -27,6 +28,7 @@ class Settings():
             with open(self.settings_file, 'r') as f:
                 data = json.loads(f.read())
             self.token = data.get("token")
+            self.admin = data.get("admin")
             self.channel_reminder = data.get("channel_reminder")
             self.start_time = self.string_to_datetime(data.get("start_time"))
             self.start_event = int(data.get("start_event"))

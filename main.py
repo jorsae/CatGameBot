@@ -11,15 +11,33 @@ import constants
 
 settings = Settings('settings.json')
 bot = commands.Bot(command_prefix='!')
+bot.remove_command('help')
 
-@bot.command(name='list')
-async def test(ctx, arg):
-    await ctx.send(arg)
-
-@bot.command(name='next')
+@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 10 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
     await ctx.send(event.next(ctx, settings, iterations))
+
+@bot.command(name='help', help='Displays this help message')
+async def help(ctx):
+    author = ctx.message.author
+    display_hidden_commands = True if str(author) in settings.admin else False
+
+    embed = discord.Embed(
+        colour = discord.Colour.orange()
+    )
+    embed.set_author(name="Help")
+    for command in bot.walk_commands():
+        command = bot.get_command(str(command))
+        if command is None:
+            continue
+        if command.hidden is False or display_hidden_commands:
+            embed.add_field(name=command, value=command.help)
+    await ctx.send(author, embed=embed)
+
+@bot.command(name="secret_test", help="Secret description", hidden=True)
+async def secret_test(ctx):
+    await ctx.send('secret spoopy')
 
 @bot.event
 async def on_message(message: discord.Message):
