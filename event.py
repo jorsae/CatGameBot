@@ -13,25 +13,24 @@ def next(ctx, settings, iterations):
         return f'No event is currently running.\nNext event in {time_left}'
     
     difference = (datetime.utcnow() - settings.start_time).total_seconds()
-    event_iterations = math.floor(difference / constants.ONE_HOUR)
+    event_iterations = math.floor(difference / constants.SIX_HOURS)
     next_event = (settings.start_event + event_iterations) % 3
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
     output = f'**Next {iterations} event(s)**\n'
-
+    
     # Event is currently ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = format_timedelta(timedelta(seconds=time_left))
-        event = (next_event - 1) % 3
-        output += f'{constants.EVENTS[event]} ongoing. Time left: {time_left}\n'
+        output += f'{constants.EVENTS[next_event]} ongoing. Time left: {time_left}\n'
     
     for i in range(iterations):
         time_left = i * constants.SIX_HOURS + time_difference
         time_left = format_timedelta(timedelta(seconds=time_left))
-        event = (next_event + i) % 3
-        output += f'[{i+1}]: {constants.EVENTS[event]} in {time_left}\n'
+        event = (next_event + (i+1)) % 3
+        output += f'{constants.EVENTS[event]} in {time_left}\n'
 
     return output
 

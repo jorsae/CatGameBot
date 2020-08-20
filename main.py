@@ -33,11 +33,7 @@ async def help(ctx):
             continue
         if command.hidden is False or display_hidden_commands:
             embed.add_field(name=command, value=command.help)
-    await ctx.send(author, embed=embed)
-
-@bot.command(name="secret_test", help="Secret description", hidden=True)
-async def secret_test(ctx):
-    await ctx.send('secret spoopy')
+    await ctx.send(embed=embed)
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -58,8 +54,9 @@ async def ping_reminder():
         time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
         if time_difference <= constants.WARNING_TIME:
             if event.is_event(settings):
-                event_iterations = math.floor(difference / constants.ONE_HOUR)
+                event_iterations = math.floor(difference / constants.SIX_HOURS)
                 next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
+                
                 logging.info(f'Ping reminder: {constants.EVENTS[next_event]} | {event_iterations}, {next_event}, {time_difference}')
                 logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} | {constants.EVENTS[next_event]}')
                 channel = bot.get_channel(settings.channel_reminder)
