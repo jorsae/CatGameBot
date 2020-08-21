@@ -13,6 +13,12 @@ settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
 
+@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
+async def next(ctx, iterations: str="1"):
+    logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
+    event_embed = event.next(ctx, settings, iterations)
+    await ctx.send(embed=event_embed)
+
 @bot.command(name='event', help='Lists current event times')
 async def list_events(ctx):
     # TODO: MAke output better looking
@@ -20,11 +26,11 @@ async def list_events(ctx):
     event_response = event.list_events(ctx, settings)
     await ctx.send(event_response)
 
-@bot.command(name='stop', help='Stops ping reminders', hidden=True)
-async def stop(ctx):
-    logging.info(f'stop executed by: {ctx.author}')
-    stop_response = event.stop(ctx, settings)
-    await ctx.send(stop_response)
+@bot.command(name='help', help='Displays this help message')
+async def help(ctx):
+    logging.info(f'help executed by: {ctx.author}')
+    help_embed = event.help(ctx, settings, bot)
+    await ctx.send(embed=help_embed)
 
 @bot.command(name='start', help='Starts ping reminders', hidden=True)
 async def start(ctx):
@@ -32,29 +38,11 @@ async def start(ctx):
     start_response = event.start(ctx, settings, bot)
     await ctx.send(start_response)
 
-@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
-async def next(ctx, iterations: str="1"):
-    logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
-    event_embed = event.next(ctx, settings, iterations)
-    await ctx.send(embed=event_embed)
-
-@bot.command(name='help', help='Displays this help message')
-async def help(ctx):
-    author = ctx.message.author
-    # Make admin check a utility function
-    display_hidden_commands = True if str(author) in settings.admin else False
-
-    embed = discord.Embed(
-        colour = discord.Colour.orange()
-    )
-    embed.set_author(name=f'CatGameBot Help')
-    for command in bot.walk_commands():
-        command = bot.get_command(str(command))
-        if command is None:
-            continue
-        if command.hidden is False or display_hidden_commands:
-            embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
-    await ctx.send(embed=embed)
+@bot.command(name='stop', help='Stops ping reminders', hidden=True)
+async def stop(ctx):
+    logging.info(f'stop executed by: {ctx.author}')
+    stop_response = event.stop(ctx, settings)
+    await ctx.send(stop_response)
 
 @bot.event
 async def on_message(message: discord.Message):
