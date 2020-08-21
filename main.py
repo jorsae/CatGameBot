@@ -13,15 +13,6 @@ settings = Settings('settings.json')
 bot = commands.Bot(command_prefix='!')
 bot.remove_command('help')
 
-@bot.command(name="test")
-async def test(ctx):
-    embed=discord.Embed(color=0x397e26)
-    embed.set_author(name="author")
-    embed.add_field(name="a", value="1", inline=False)
-    embed.add_field(name="b", value="2", inline=False)
-    embed.add_field(name="c", value="3", inline=False)
-    await ctx.send(embed=embed)
-
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
@@ -65,9 +56,7 @@ async def ping_reminder():
             if event.is_event(settings):
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
                 next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
-                
-                logging.info(f'Ping reminder: {constants.EVENTS[next_event]} | {event_iterations}, {next_event}, {time_difference}')
-                logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} | {constants.EVENTS[next_event]}')
+                logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} ({next_event})')
                 channel = bot.get_channel(settings.channel_reminder)
                 await channel.send(f'{constants.EVENT_PINGS[next_event]} {constants.EVENTS[next_event]} in {event.format_timedelta(timedelta(seconds=time_difference))}')
             else:
@@ -80,7 +69,6 @@ async def ping_reminder():
 
 async def do_tasks():
     await bot.wait_until_ready()
-    print(f'Logged in as {bot.user}')
     logging.info(f'Logged in as {bot.user}')
     if settings.start_ping_reminder:
         settings.start_ping_reminder = False
@@ -97,12 +85,5 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
-    # print(settings)
-    # print(event.get_next_event(settings))
-    # print(event.is_event(settings))
-    # print(event.next(None, settings, 1))
-    # print(event.next(None, settings, 3))
-    # print(event.next(None, settings, 13))
-    # print(event.next(None, settings, "asd"))
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
