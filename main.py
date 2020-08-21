@@ -47,13 +47,13 @@ async def help(ctx):
     embed = discord.Embed(
         colour = discord.Colour.orange()
     )
-    embed.set_author(name=f'[{constants.PREFIX}] Help')
+    embed.set_author(name=f'CatGameBot Help')
     for command in bot.walk_commands():
         command = bot.get_command(str(command))
         if command is None:
             continue
         if command.hidden is False or display_hidden_commands:
-            embed.add_field(name=command, value=command.help)
+            embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
     await ctx.send(embed=embed)
 
 @bot.event
