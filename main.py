@@ -10,23 +10,37 @@ import event
 import constants
 
 settings = Settings('settings.json')
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
+
+@bot.command(name='stop', help='Stops ping reminders', hidden=True)
+async def stop(ctx):
+    logging.info(f'stop executed by: {ctx.author}')
+    stop_response = event.stop(ctx, settings)
+    await ctx.send(stop_response)
+
+@bot.command(name='start', help='Starts ping reminders', hidden=True)
+async def start(ctx):
+    logging.info(f'start executed by: {ctx.author}')
+    start_response = event.start(ctx, settings, bot)
+    await ctx.send(start_response)
 
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
-    await ctx.send(embed=event.next(ctx, settings, iterations))
+    event_embed = event.next(ctx, settings, iterations)
+    await ctx.send(embed=event_embed)
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
     author = ctx.message.author
+    # Make admin check a utility function
     display_hidden_commands = True if str(author) in settings.admin else False
 
     embed = discord.Embed(
         colour = discord.Colour.orange()
     )
-    embed.set_author(name="Help")
+    embed.set_author(name=f'[{constants.PREFIX}] Help')
     for command in bot.walk_commands():
         command = bot.get_command(str(command))
         if command is None:
@@ -50,6 +64,7 @@ async def on_message(message: discord.Message):
 async def ping_reminder():
     logging.info(f'Ping reminder is running: {settings.run_ping_reminder}')
     while settings.run_ping_reminder:
+        settings.is_running_ping_reminder = True
         difference = (datetime.utcnow() - settings.start_time).total_seconds()
         time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
         if time_difference <= constants.WARNING_TIME:
@@ -66,6 +81,8 @@ async def ping_reminder():
             sleep_time = time_difference - constants.WARNING_TIME
             logging.info(f'Sleep time: {sleep_time}')
             await asyncio.sleep(sleep_time)
+    logging.info('Ping reminder stopped')
+    settings.is_running_ping_reminder = False
 
 async def do_tasks():
     await bot.wait_until_ready()

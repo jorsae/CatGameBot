@@ -1,3 +1,4 @@
+import main
 import discord
 import math
 from datetime import datetime, timedelta
@@ -35,6 +36,30 @@ def next(ctx, settings, iterations):
         embed.add_field(name=f'{constants.EVENTS[event]}', value=f'Time left: {time_left}')
 
     return embed
+
+def stop(ctx, settings):
+    author = str(ctx.message.author)
+    # Make admin check a utility function
+    if author not in settings.admin:
+        logging.warning(f'stop was attempted to be executed by: {author}')
+        return 'You do not have the permissions for this command'
+    
+    settings.run_ping_reminder = False
+    return 'Ping reminder stopped successfully'
+
+def start(ctx, settings, bot):
+    author = str(ctx.message.author)
+    # Make admin check a utility function
+    if author not in settings.admin:
+        logging.warning(f'start was attempted to be executed by: {author}')
+        return 'You do not have the permissions for this command'
+    
+    settings.run_ping_reminder = True
+    if settings.is_running_ping_reminder is False:
+        bot.loop.create_task(ping_reminder())
+        return 'Bot was started successfully | 1'
+    
+    return 'Bot was started successfully | 2'
 
 def clean_iterations(iterations):
     try:

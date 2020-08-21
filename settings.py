@@ -16,6 +16,7 @@ class Settings():
         
         self.start_ping_reminder = True
         self.run_ping_reminder = True
+        self.is_running_ping_reminder = False
     
     def __str__(self):
         eventTimes = ''
