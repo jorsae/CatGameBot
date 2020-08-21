@@ -37,6 +37,12 @@ def next(ctx, settings, iterations):
 
     return embed
 
+def list_events(ctx, settings):
+    output = "__**Current events [utc]**__\n"
+    for event in settings.event_times:
+        output += f'{event.start_time} - {event.end_time}\n'
+    return output
+
 def stop(ctx, settings):
     author = str(ctx.message.author)
     # Make admin check a utility function

@@ -13,6 +13,13 @@ settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
 
+@bot.command(name='event', help='Lists current event times')
+async def list_events(ctx):
+    # TODO: MAke output better looking
+    logging.info(f'event executed by: {ctx.author}')
+    event_response = event.list_events(ctx, settings)
+    await ctx.send(event_response)
+
 @bot.command(name='stop', help='Stops ping reminders', hidden=True)
 async def stop(ctx):
     logging.info(f'stop executed by: {ctx.author}')
