@@ -21,7 +21,7 @@ def next(ctx, settings, iterations):
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
-    embed=discord.Embed(colour=discord.Colour.green())
+    embed = discord.Embed(colour=discord.Colour.green())
     embed.set_author(name=f'Next {iterations} event(s)')
     
     # Event is currently ongoing NOW
@@ -39,10 +39,12 @@ def next(ctx, settings, iterations):
     return embed
 
 def list_events(ctx, settings):
-    output = "__**Current events [utc]**__\n"
+    embed = discord.Embed(colour=discord.Colour.green())
+    embed.set_author(name=f'Current events [utc]')
+
     for event in settings.event_times:
-        output += f'{event.start_time} - {event.end_time}\n'
-    return output
+        embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
+    return embed
 
 def stop(ctx, settings):
     author = str(ctx.message.author)

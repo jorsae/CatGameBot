@@ -21,10 +21,9 @@ async def next(ctx, iterations: str="1"):
 
 @bot.command(name='event', help='Lists current event times')
 async def list_events(ctx):
-    # TODO: MAke output better looking
     logging.info(f'event executed by: {ctx.author}')
-    event_response = event.list_events(ctx, settings)
-    await ctx.send(event_response)
+    event_embed = event.list_events(ctx, settings)
+    await ctx.send(embed=event_embed)
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
