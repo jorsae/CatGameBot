@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from discord.ext import commands
 from settings import Settings
 import event
+import utility
 import constants
 
 settings = Settings('settings.json')
@@ -62,12 +63,12 @@ async def ping_reminder():
         difference = (datetime.utcnow() - settings.start_time).total_seconds()
         time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
         if time_difference <= constants.WARNING_TIME:
-            if event.is_event(settings):
+            if utility.is_event(settings):
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
                 next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
                 logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} ({next_event})')
                 channel = bot.get_channel(settings.channel_reminder)
-                await channel.send(f'{constants.EVENT_PINGS[next_event]} {constants.EVENTS[next_event]} in {event.format_timedelta(timedelta(seconds=time_difference))}')
+                await channel.send(f'{constants.EVENT_PINGS[next_event]} {constants.EVENTS[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
             else:
                 logging.debug(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
