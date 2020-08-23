@@ -77,10 +77,13 @@ def help(ctx, settings, bot):
 
     embed = discord.Embed(colour=discord.Colour.orange())
     embed.set_author(name=f'CatGameBot Help')
+    last_command = None
     for command in bot.walk_commands():
         command = bot.get_command(str(command))
         if command is None:
             continue
         if command.hidden is False or display_hidden_commands:
-            embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
+            if last_command != str(command):
+                embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
+            last_command = str(command)
     return embed

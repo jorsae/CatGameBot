@@ -14,7 +14,7 @@ settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
 
-@bot.command(name='next', help="next <digit> will list the next <digit> events. Defaults to 3 events, if not specified. Max is 9 events. e.g: !next 5")
+@bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
     event_embed = event.next(ctx, settings, iterations)
@@ -25,6 +25,11 @@ async def list_events(ctx):
     logging.info(f'event executed by: {ctx.author}')
     event_embed = event.list_events(ctx, settings)
     await ctx.send(embed=event_embed)
+
+@bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
+async def calculator(ctx):
+    logging.info(f'calculator executed by: {ctx.author}')
+    await ctx.send(f'Visit https://CatGameCalculator.com to help your crafting needs')
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
