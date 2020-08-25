@@ -12,6 +12,14 @@ def clean_iterations(iterations):
     except:
         return 1
 
+# returns true if the user is an admin. False otherwise
+def is_admin(author, settings):
+    print(f'{author} | type: {type(author)}')
+    if type(author) == str:
+        return author in settings.admin
+    else:
+        return str(author) in settings.admin
+
 # returns true/false if an event is currently running
 def is_event(settings):
     now = datetime.utcnow()

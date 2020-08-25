@@ -48,8 +48,8 @@ def list_events(ctx, settings):
 
 def stop(ctx, settings):
     author = str(ctx.message.author)
-    # Make admin check a utility function
-    if author not in settings.admin:
+    is_admin = utility.is_admin(author, settings)
+    if is_admin is False:
         logging.warning(f'stop was attempted to be executed by: {author}')
         return 'You do not have the permissions for this command'
     
@@ -58,8 +58,8 @@ def stop(ctx, settings):
 
 def start(ctx, settings, bot):
     author = str(ctx.message.author)
-    # Make admin check a utility function
-    if author not in settings.admin:
+    is_admin = utility.is_admin(author, settings)
+    if is_admin is False:
         logging.warning(f'start was attempted to be executed by: {author}')
         return 'You do not have the permissions for this command'
     
@@ -72,8 +72,7 @@ def start(ctx, settings, bot):
 
 def help(ctx, settings, bot):
     author = ctx.message.author
-    # Make admin check a utility function
-    display_hidden_commands = True if str(author) in settings.admin else False
+    display_hidden_commands = utility.is_admin(author, settings)
 
     embed = discord.Embed(colour=discord.Colour.orange())
     embed.set_author(name=f'CatGameBot Help')
