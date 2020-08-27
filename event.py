@@ -45,6 +45,8 @@ def next(ctx, settings, iterations):
     return embed
 
 def list_events(ctx, settings):
+    # TODO: Do not display events that have passed
+    # TODO: Only display events that have passed to admins
     embed = discord.Embed(colour=discord.Colour.green())
     embed.set_author(name=f'Current events [utc]')
 
