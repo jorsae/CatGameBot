@@ -55,6 +55,12 @@ async def add_event(ctx, start, stop):
     addevent_response = event.add_event(ctx, settings, start, stop)
     await ctx.send(addevent_response)
 
+@bot.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3, deletes event nr. 3')
+async def delete_event(ctx, *number):
+    logging.info(f'delevent executed by: {ctx.author}')
+    delevent_response = event.delete_event(ctx, settings, *number)
+    await ctx.send(delevent_response)
+
 @bot.event
 async def on_message(message: discord.Message):
     await bot.wait_until_ready()

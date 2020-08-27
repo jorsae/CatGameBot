@@ -52,6 +52,23 @@ def list_events(ctx, settings):
         embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
     return embed
 
+def help(ctx, settings, bot):
+    author = ctx.message.author
+    display_hidden_commands = utility.is_admin(author, settings)
+
+    embed = discord.Embed(colour=discord.Colour.orange())
+    embed.set_author(name=f'CatGameBot Help')
+    last_command = None
+    for command in bot.walk_commands():
+        command = bot.get_command(str(command))
+        if command is None:
+            continue
+        if command.hidden is False or display_hidden_commands:
+            if last_command != str(command):
+                embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
+            last_command = str(command)
+    return embed
+
 def stop(ctx, settings):
     author = str(ctx.message.author)
     is_admin = utility.is_admin(author, settings)
@@ -76,23 +93,6 @@ def start(ctx, settings, bot):
     
     return 'Bot was started successfully | 2'
 
-def help(ctx, settings, bot):
-    author = ctx.message.author
-    display_hidden_commands = utility.is_admin(author, settings)
-
-    embed = discord.Embed(colour=discord.Colour.orange())
-    embed.set_author(name=f'CatGameBot Help')
-    last_command = None
-    for command in bot.walk_commands():
-        command = bot.get_command(str(command))
-        if command is None:
-            continue
-        if command.hidden is False or display_hidden_commands:
-            if last_command != str(command):
-                embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
-            last_command = str(command)
-    return embed
-
 def add_event(ctx, settings, start, stop):
     author = str(ctx.message.author)
     is_admin = utility.is_admin(author, settings)
@@ -115,3 +115,20 @@ def add_event(ctx, settings, start, stop):
     except Exception as e:
         logging.warning(f'Failed to add event time: {start} - {stop}. Exception: {e}')
         return 'Failed to add event time'
+
+def delete_event(ctx, settings, *number):
+    '''
+    TODO: If I want to add so you can delete specific events, instead of all
+    if len(number) <= 0:
+        print('Delete all')
+    else:
+        numbers = sorted(number)
+        print(f'delete: {numbers}')
+    '''
+
+    settings.event_times = []
+    settings_saved = settings.save_settings()
+    if settings_saved:
+        return 'All events deleted successfully'
+    else:
+        return 'Failed to delete events'
