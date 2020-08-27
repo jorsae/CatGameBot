@@ -34,11 +34,11 @@ class Settings():
             self.start_time = self.string_to_datetime(data.get("start_time"))
             self.start_event = int(data.get("start_event"))
             
-            events = data.get("eventTimes")
+            events = data.get("event_times")
             self.event_times.clear()
             for event in events:
-                startTime = self.string_to_datetime(event.get("startTime"))
-                endTime = self.string_to_datetime(event.get("endTime"))
+                startTime = self.string_to_datetime(event.get("start_time"))
+                endTime = self.string_to_datetime(event.get("end_time"))
                 self.event_times.append(EventTime(startTime, endTime))
             logging.info('Parsed settings successfully')
             return True
@@ -52,7 +52,7 @@ class Settings():
             'channel_reminder': self.channel_reminder,
             'start_event': self.start_event,
             'start_time': self.start_time.strftime("%B %d %Y, %H:%M:%S"),
-            'eventTimes': [dict(eventTime) for eventTime in self.event_times],
+            'event_times': [dict(eventTime) for eventTime in self.event_times],
             'admin': self.admin
         }
 

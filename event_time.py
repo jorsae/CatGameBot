@@ -8,6 +8,6 @@ class EventTime():
 
     def __iter__(self):
         yield from {
-            'startTime' : self.start_time.strftime("%B %d %Y, %H:%M:%S"),
-            'endTime': self.end_time.strftime("%B %d %Y, %H:%M:%S")
+            'start_time' : self.start_time.strftime("%B %d %Y, %H:%M:%S"),
+            'end_time': self.end_time.strftime("%B %d %Y, %H:%M:%S")
         }.items()
