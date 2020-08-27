@@ -14,7 +14,6 @@ def clean_iterations(iterations):
 
 # returns true if the user is an admin. False otherwise
 def is_admin(author, settings):
-    print(f'{author} | type: {type(author)}')
     if type(author) == str:
         return author in settings.admin
     else:

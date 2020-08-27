@@ -1,9 +1,10 @@
-import main
 import discord
 import math
+import logging
 from datetime import datetime, timedelta
 import constants
 import utility
+from event_time import EventTime
 
 def next(ctx, settings, iterations):
     iterations = utility.clean_iterations(iterations)
@@ -91,3 +92,22 @@ def help(ctx, settings, bot):
                 embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
             last_command = str(command)
     return embed
+
+def add_event(ctx, settings, start, stop):
+    author = str(ctx.message.author)
+    is_admin = utility.is_admin(author, settings)
+    if is_admin is False:
+        logging.warning(f'start was attempted to be executed by: {author}')
+        return 'You do not have the permissions for this command'
+    
+    # Syntax: !addevent 2020-10-06 2020-16-06
+    try:
+        # Because it's parsed as aest, I have to remove 1day so it matches utc and therefore matches the in game times
+        startTime = datetime.strptime(f'{start} 00:00:00 Z', '%Y-%m-%d %H:%M:%S %z')
+        stopTime = datetime.strptime(f'{stop} 18:30:00 Z', '%Y-%m-%d %H:%M:%S %z')
+
+        settings.event_times.append(EventTime(startTime, stopTime))
+        return f'Successfully added event: {startTime} - {stopTime}'
+    except Exception as e:
+        logging.warning(f'Failed to add event time: {start} - {stop}. Exception: {e}')
+        return 'Failed to add event time'

@@ -49,6 +49,12 @@ async def stop(ctx):
     stop_response = event.stop(ctx, settings)
     await ctx.send(stop_response)
 
+@bot.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
+async def add_event(ctx, start, stop):
+    logging.info(f'addevent executed by: {ctx.author}')
+    addevent_response = event.add_event(ctx, settings, start, stop)
+    await ctx.send(addevent_response)
+
 @bot.event
 async def on_message(message: discord.Message):
     await bot.wait_until_ready()
