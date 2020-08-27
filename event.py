@@ -107,7 +107,8 @@ def add_event(ctx, settings, start, stop):
         stopTime = datetime.strptime(f'{stop} 18:30:00 Z', '%Y-%m-%d %H:%M:%S %z')
 
         settings.event_times.append(EventTime(startTime, stopTime))
-        return f'Successfully added event: {startTime} - {stopTime}'
+        settings_saved = settings.save_settings()
+        return f'Successfully added event: {startTime} - {stopTime}. Settings saved: {settings_saved}'
     except Exception as e:
         logging.warning(f'Failed to add event time: {start} - {stop}. Exception: {e}')
         return 'Failed to add event time'

@@ -46,6 +46,24 @@ class Settings():
             logging.critical(f'Failed to parse_settings: {e}')
             return False
     
-    @staticmethod
-    def string_to_datetime(string):
+    def save_settings(self):
+        save_data = {
+            'token': self.token,
+            'channel_reminder': self.channel_reminder,
+            'start_event': self.start_event,
+            'start_time': self.start_time.strftime("%B %d %Y, %H:%M:%S"),
+            'eventTimes': [dict(eventTime) for eventTime in self.event_times],
+            'admin': self.admin
+        }
+
+        try:
+            json_data = json.dumps(save_data, ensure_ascii=False, indent=4, sort_keys=True, default=str)
+            with open(self.settings_file, 'w') as f:
+                f.write(json_data)
+            return True
+        except Exception as e:
+            logging.warning(f'Failed to save settings: {e}')
+            return False
+
+    def string_to_datetime(self, string):
         return datetime.strptime(string, "%B %d %Y, %H:%M:%S")
