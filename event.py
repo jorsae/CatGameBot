@@ -10,10 +10,14 @@ def next(ctx, settings, iterations):
 
     if utility.is_event(settings) is False:
         next_event = utility.get_next_event(settings)
+        embed = discord.Embed(colour=discord.Colour.red())
+
         if next_event is None:
-            return 'No event is currently running.'
+            embed.set_author(name='No event is currently running.')
+            return embed
         time_left = next_event - datetime.utcnow()
-        return f'No event is currently running.\nNext event in {time_left}'
+        embed.set_author(name=f'No event is currently running.\nNext event in {time_left}')
+        return embed
     
     difference = (datetime.utcnow() - settings.start_time).total_seconds()
     event_iterations = math.floor(difference / constants.SIX_HOURS)
