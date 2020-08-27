@@ -28,6 +28,12 @@ def is_event(settings):
             return True
     return False
 
+def is_event_with_date(settings, date):
+    for event in settings.event_times:
+        if event.start_time <= date <= event.end_time:
+            return True
+    return False
+
 # Returns the start_time of the next event coming up
 def get_next_event(settings):
     now = datetime.utcnow()

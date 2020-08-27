@@ -68,7 +68,8 @@ async def ping_reminder():
         difference = (datetime.utcnow() - settings.start_time).total_seconds()
         time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
         if time_difference <= constants.WARNING_TIME:
-            if utility.is_event(settings):
+            is_event = should_ping(settings)
+            if is_event:
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
                 next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
                 logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} ({next_event})')
@@ -83,6 +84,15 @@ async def ping_reminder():
             await asyncio.sleep(sleep_time)
     logging.info('Ping reminder stopped')
     settings.is_running_ping_reminder = False
+
+def should_ping(settings):
+    if utility.is_event(settings):
+        return True
+    next_event = utility.get_next_event(settings)
+    if next_event is None:
+        return False
+    
+    return utility.is_event_with_date(settings, next_event)
 
 async def do_tasks():
     await bot.wait_until_ready()
