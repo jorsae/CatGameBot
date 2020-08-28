@@ -26,21 +26,22 @@ def next(ctx, settings, iterations):
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
+    event_text = 'event' if iterations <= 1 else f'{iterations} events'
     embed = discord.Embed(colour=discord.Colour.green())
-    embed.set_author(name=f'Next {iterations} event(s)')
+    embed.set_author(name=f'Next {event_text}')
     
     # Event is currently ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
-        embed.add_field(name=f'{constants.EVENTS[next_event]}', value=f'Running now! Time left: {time_left}')
+        embed.add_field(name=f'{constants.EVENTS[next_event]}', value=f'Time remaining: {time_left}')
         iterations -= 1
     
     for i in range(iterations):
         time_left = i * constants.SIX_HOURS + time_difference
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
         event = (next_event + (i+1)) % 3
-        embed.add_field(name=f'{constants.EVENTS[event]}', value=f'Time left: {time_left}')
+        embed.add_field(name=f'{constants.EVENTS[event]}', value=f'Time until: {time_left}')
 
     return embed
 
