@@ -54,8 +54,10 @@ def list_events(ctx, settings):
 
     now = datetime.utcnow()
     for event in settings.event_times:
-        if event.end_time > now or is_admin:
+        if event.end_time > now:
             embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
+        if event.end_time <= now and is_admin:
+            embed.add_field(name='[Delete] Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
     return embed
 
 def help(ctx, settings, bot):
