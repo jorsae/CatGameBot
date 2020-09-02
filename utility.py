@@ -27,6 +27,7 @@ def is_event(settings):
             return True
     return False
 
+# returns true/false if an event is currently running during the set date
 def is_event_with_date(settings, date):
     for event in settings.event_times:
         if event.start_time <= date <= event.end_time:
