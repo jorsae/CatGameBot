@@ -46,13 +46,16 @@ def next(ctx, settings, iterations):
     return embed
 
 def list_events(ctx, settings):
-    # TODO: Do not display events that have passed
-    # TODO: Only display events that have passed to admins
+    author = ctx.message.author
+    is_admin = utility.is_admin(author, settings)
+    
     embed = discord.Embed(colour=discord.Colour.green())
     embed.set_author(name=f'Current events [utc]')
 
+    now = datetime.utcnow()
     for event in settings.event_times:
-        embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
+        if event.end_time > now or is_admin:
+            embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
     return embed
 
 def help(ctx, settings, bot):
@@ -120,18 +123,25 @@ def add_event(ctx, settings, start, stop):
         return 'Failed to add event time'
 
 def delete_event(ctx, settings, *number):
-    '''
-    TODO: If I want to add so you can delete specific events, instead of all
+    # Might be easier to just try and revert if it fails.
+    numbers = None
     if len(number) <= 0:
         print('Delete all')
     else:
-        numbers = sorted(number)
-        print(f'delete: {numbers}')
-    '''
+        numbers = map(int, sorted(number))
+    
+    event_count = len(settings.event_times)
+    all_positive = all(i <= 0 for i in numbers)
+    print(f'all_positive: {all_positive}')
+    over_event_count = all(i >= event_count for i in numbers)
+    print(f'over_event_count: {over_event_count}')
 
-    settings.event_times = []
-    settings_saved = settings.save_settings()
-    if settings_saved:
+    print(f'delete: {numbers} / {len(settings.event_times)}')
+
+    #settings.event_times = []
+    #settings_saved = settings.save_settings()
+    #if settings_saved:
+    if True:
         return 'All events deleted successfully'
     else:
         return 'Failed to delete events'
