@@ -1,7 +1,7 @@
 import discord
 import math
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import constants
 import utility
 from event_time import EventTime
@@ -54,7 +54,10 @@ def list_events(ctx, settings):
 
     now = datetime.utcnow()
     index = 0
+    print(f'length: {settings.event_times}')
+    print(now.tzinfo)
     for event in settings.event_times:
+        print(event.end_time.tzinfo)
         name = 'Mini event'
         if is_admin:
             name = f'[{index}] {name}'
@@ -118,8 +121,8 @@ def add_event(ctx, settings, start, stop):
     # Syntax: !addevent 2020-10-06 2020-16-06
     try:
         # Because it's parsed as aest, I have to remove 1day so it matches utc and therefore matches the in game times
-        startTime = datetime.strptime(f'{start} 00:00:00 Z', '%Y-%m-%d %H:%M:%S %z')
-        stopTime = datetime.strptime(f'{stop} 18:30:00 Z', '%Y-%m-%d %H:%M:%S %z')
+        startTime = datetime.strptime(f'{start} 00:00:00', '%Y-%m-%d %H:%M:%S')
+        stopTime = datetime.strptime(f'{stop} 18:30:00', '%Y-%m-%d %H:%M:%S')
 
         settings.event_times.append(EventTime(startTime, stopTime))
         settings_saved = settings.save_settings()
