@@ -54,10 +54,7 @@ def list_events(ctx, settings):
 
     now = datetime.utcnow()
     index = 0
-    print(f'length: {settings.event_times}')
-    print(now.tzinfo)
     for event in settings.event_times:
-        print(event.end_time.tzinfo)
         name = 'Mini event'
         if is_admin:
             name = f'[{index}] {name}'
