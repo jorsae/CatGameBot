@@ -53,11 +53,18 @@ def list_events(ctx, settings):
     embed.set_author(name=f'Current events [utc]')
 
     now = datetime.utcnow()
+    index = 0
     for event in settings.event_times:
-        if event.end_time > now:
-            embed.add_field(name='Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
-        if event.end_time <= now and is_admin:
-            embed.add_field(name='[Delete] Mini event', value=f'{event.start_time} - {event.end_time}', inline=False)
+        name = 'Mini event'
+        if is_admin:
+            name = f'[{index}] {name}'
+            if event.end_time <= now:
+                name = f'{name} | Delete'
+            embed.add_field(name=name, value=f'{event.start_time} - {event.end_time}', inline=False)
+        else:
+            if event.end_time > now:
+                embed.add_field(name=name, value=f'{event.start_time} - {event.end_time}', inline=False)
+        index += 1
     return embed
 
 def help(ctx, settings, bot):
@@ -125,25 +132,55 @@ def add_event(ctx, settings, start, stop):
         return 'Failed to add event time'
 
 def delete_event(ctx, settings, *number):
-    # Might be easier to just try and revert if it fails.
-    numbers = None
-    if len(number) <= 0:
-        print('Delete all')
-    else:
-        numbers = map(int, sorted(number))
+    author = str(ctx.message.author)
+    is_admin = utility.is_admin(author, settings)
+    if is_admin is False:
+        logging.warning(f'start was attempted to be executed by: {author}')
+        return 'You do not have the permissions for this command'
     
-    event_count = len(settings.event_times)
-    all_positive = all(i <= 0 for i in numbers)
-    print(f'all_positive: {all_positive}')
-    over_event_count = all(i >= event_count for i in numbers)
-    print(f'over_event_count: {over_event_count}')
-
-    print(f'delete: {numbers} / {len(settings.event_times)}')
-
-    #settings.event_times = []
-    #settings_saved = settings.save_settings()
-    #if settings_saved:
-    if True:
-        return 'All events deleted successfully'
+    numbers = []
+    if len(number) <= 0:
+        for i in range(len(settings.event_times) - 1, -1 , -1):
+            numbers.append(i)
     else:
-        return 'Failed to delete events'
+        numbers = clean_number_input(number)
+    
+    if numbers is None:
+        return 'Bad user input'
+    else:
+        numbers = sorted(numbers)
+    
+    numbers = list(set(numbers))
+    clean = number_is_clean(numbers, settings.event_times)
+
+    if clean is False:
+        return f'Bad user input | {clean}'
+    
+    output = ''
+    for i in reversed(numbers):
+        logging.info(f'{author}: Deleted event: {settings.event_times[i]}')
+        output += f'{settings.event_times[i]}\n'
+        settings.event_times.pop(i)
+
+    settings_saved = settings.save_settings()
+    if settings_saved:
+        return f'Successfully deleted: {output}'
+    else:
+        logging.error(f'{author} failed to delete: {output}')
+        return f'Failed to delete: {output}'
+
+def number_is_clean(numbers, event_list):
+    events = len(event_list) - 1
+    for i in numbers:
+        if i > events or i < 0:
+            return False
+    return True
+
+def clean_number_input(number):
+    numbers = []
+    for i in enumerate(number):
+        try:
+            numbers.append(int(i[1]))
+        except:
+            return None
+    return numbers
