@@ -154,7 +154,7 @@ def delete_event(ctx, settings, *number):
     clean = number_is_clean(numbers, settings.event_times)
 
     if clean is False:
-        return f'Bad user input | {clean}'
+        return 'Bad user input'
     
     output = ''
     for i in reversed(numbers):
