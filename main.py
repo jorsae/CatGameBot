@@ -10,6 +10,9 @@ import event
 import utility
 import constants
 
+# per server prefixes
+# https://stackoverflow.com/questions/51915962/per-server-prefixs
+
 settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
