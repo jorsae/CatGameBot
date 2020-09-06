@@ -67,6 +67,13 @@ def list_events(ctx, settings):
         index += 1
     return embed
 
+def daily(ctx):
+    now = datetime.utcnow() # Format this properly
+    seconds = ((24 - now.hour - 1) * 60 * 60) + ((60 - now.minute - 1) * 60) + (60 - now.second)
+    reset = timedelta(seconds=seconds)
+    reset = utility.format_timedelta(reset)
+    return f'Current time: {now}\nTime till daily reset: {reset}'
+
 def help(ctx, settings, bot):
     author = ctx.message.author
     display_hidden_commands = utility.is_admin(author, settings)

@@ -12,6 +12,7 @@ import constants
 
 # per server prefixes
 # https://stackoverflow.com/questions/51915962/per-server-prefixs
+# Need to store: channel_id, prefix, channel_reminder, reaction_role_post, reaction_role_id, status (if they have set up reaction_role_post, etc)
 
 settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
@@ -20,14 +21,20 @@ bot.remove_command('help')
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="1"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
-    event_embed = event.next(ctx, settings, iterations)
-    await ctx.send(embed=event_embed)
+    next_embed = event.next(ctx, settings, iterations)
+    await ctx.send(embed=next_embed)
 
 @bot.command(name='event', help='Lists current event times')
 async def list_events(ctx):
     logging.info(f'event executed by: {ctx.author}')
     event_embed = event.list_events(ctx, settings)
     await ctx.send(embed=event_embed)
+
+@bot.command(name='daily', aliases=['time'], help='Lists the time till daily reset')
+async def daily(ctx):
+    logging.info(f'daily executed by: {ctx.author}')
+    daily = event.daily(ctx)
+    await ctx.send(daily)
 
 @bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
 async def calculator(ctx):
