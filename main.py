@@ -41,7 +41,7 @@ async def calculator(ctx):
     logging.info(f'calculator executed by: {ctx.author}')
     await ctx.send(f'Visit https://CatGameCalculator.com to help your crafting needs')
 
-@bot.command(name='ping')
+@bot.command(name='ping', help='CatGameBot speed test')
 async def ping(ctx):
     ms = round(bot.latency, 3)
     await ctx.send(f'Pong! {ms} sec')
