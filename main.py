@@ -30,11 +30,11 @@ async def list_events(ctx):
     event_embed = event.list_events(ctx, settings)
     await ctx.send(embed=event_embed)
 
-@bot.command(name='daily', aliases=['time'], help='Lists the time till daily reset')
-async def daily(ctx):
-    logging.info(f'daily executed by: {ctx.author}')
-    daily = event.daily(ctx)
-    await ctx.send(daily)
+@bot.command(name='time', aliases=['daily'], help='Lists the time till daily reset')
+async def time(ctx):
+    logging.info(f'time executed by: {ctx.author}')
+    time_embed = event.time(ctx)
+    await ctx.send(embed=time_embed)
 
 @bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
 async def calculator(ctx):

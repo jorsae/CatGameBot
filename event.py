@@ -67,12 +67,16 @@ def list_events(ctx, settings):
         index += 1
     return embed
 
-def daily(ctx):
-    now = datetime.utcnow() # Format this properly
+def time(ctx):
+    embed = discord.Embed(colour = discord.Colour.green())
+    embed.set_author(name=f'Cat Game time')
+    now = datetime.utcnow()
     seconds = ((24 - now.hour - 1) * 60 * 60) + ((60 - now.minute - 1) * 60) + (60 - now.second)
     reset = timedelta(seconds=seconds)
     reset = utility.format_timedelta(reset)
-    return f'Current time: {now}\nTime till daily reset: {reset}'
+
+    embed.add_field(name=f'Time till daily reset: {reset}', value=f'[utc] CatGame time: {now}\n', inline=False)
+    return embed
 
 def help(ctx, settings, bot):
     author = ctx.message.author
