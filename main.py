@@ -115,11 +115,14 @@ async def ping_reminder():
 def should_ping(settings):
     if utility.is_event(settings):
         return True
+    return False
+    '''
     next_event = utility.get_next_event(settings)
     if next_event is None:
         return False
     
     return utility.is_event_with_date(settings, next_event)
+    '''
 
 async def do_tasks():
     await bot.wait_until_ready()
