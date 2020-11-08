@@ -5,7 +5,9 @@ import os
 import logging
 from datetime import datetime, timedelta
 from discord.ext import commands
+
 from settings import Settings
+import RockPaperScissors
 import event
 import utility
 import constants
@@ -40,6 +42,20 @@ async def time(ctx):
 async def calculator(ctx):
     logging.info(f'calculator executed by: {ctx.author}')
     await ctx.send(f'Visit https://CatGameCalculator.com to help your crafting needs')
+
+@bot.command(name='rps', help='Rock paper scissors mini game. !rps help for more details!')
+async def rps(ctx, selection: str='help'):
+    selection = selection.lower()
+    embed = None
+    if selection == 'help':
+        embed = RockPaperScissors.help()
+    elif selection == 'rank' or selection == 'ranks':
+        embed = RockPaperScissors.rank()
+    elif selection == 'profile':
+        embed = RockPaperScissors.profile(ctx.message.author)
+    else:
+        embed = RockPaperScissors.game(ctx.message.author, selection)
+    await ctx.send(embed=embed)
 
 @bot.command(name='ping', help='CatGameBot speed test')
 async def ping(ctx):
@@ -135,5 +151,6 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
+    RockPaperScissors.setup_database()
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
