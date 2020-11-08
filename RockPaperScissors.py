@@ -25,7 +25,7 @@ def rank():
         embed = discord.Embed(colour=discord.Colour.orange(), title=f'Rock, Paper, Scissors Rankings!')
         rank = 1
         for user in query:
-            embed.add_field(name=f'{rank}. {user.username}: {user.wins}wins', value=f'Draw: {user.draw}, Loss: {user.loss}', inline=False)
+            embed.add_field(name=f'{rank}. {user.username}: {user.wins} wins', value=f'Draw: {user.draw}, Loss: {user.loss}', inline=False)
             rank += 1
         return embed
     except Exception as e:
