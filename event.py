@@ -17,7 +17,11 @@ def next(ctx, settings, iterations):
             embed.set_author(name='No event is currently running.')
             return embed
         time_left = next_event - datetime.utcnow()
-        embed.set_author(name=f'No event is currently running.\nNext event in {time_left}')
+
+        difference = (datetime.utcnow() - next_event).total_seconds()
+        event_iterations = math.floor(difference / constants.SIX_HOURS)
+        start_event = (settings.start_event + event_iterations) % 3
+        embed.add_field(name=f'No event is currently running.\nNext event in {time_left}', value=f'Starting event is: {constants.EVENTS[start_event]}')
         return embed
     
     difference = (datetime.utcnow() - settings.start_time).total_seconds()
