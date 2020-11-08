@@ -38,6 +38,7 @@ def profile(author):
         user = RockPaperScissorsModel.get(RockPaperScissorsModel.user_id == author.id)
         embed = discord.Embed(colour=discord.Colour.orange(), title=f'{str(author.name)} Profile')
         embed.add_field(name=f"Wins: {user.wins}, Loss: {user.loss}, Draw: {user.draw}", value=f'Total games played: {user.wins+user.loss+user.draw}\nLast game played: {user.last_played}\nFirst game played: {user.created_date}')
+        return embed
     except DoesNotExist:
         embed = discord.Embed(colour=discord.Colour.orange(), title=f'{str(author.name)} Profile')
         embed.add_field(name=f'You have not played any games!', value=f'"{constants.PREFIX}rps help" to get started')
@@ -48,7 +49,6 @@ def profile(author):
     return embed
 
 def game(author, selection):
-    print(f'{author.id=} | {selection=}')
     user_selection = get_user_selection(selection)
     if user_selection == -1:
         embed = discord.Embed(colour=discord.Colour.red())
