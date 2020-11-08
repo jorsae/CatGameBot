@@ -19,7 +19,7 @@ bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
 
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
-async def next(ctx, iterations: str="1"):
+async def next(ctx, iterations: str="3"):
     logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
     next_embed = event.next(ctx, settings, iterations)
     await ctx.send(embed=next_embed)
