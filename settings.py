@@ -7,6 +7,7 @@ class Settings():
     def __init__(self, settings_file):
         self.settings_file = settings_file
         self.admin = None
+        self.events = []
         self.channel_reminder = None
         self.token = None
         self.event_times = []
@@ -33,12 +34,16 @@ class Settings():
             self.channel_reminder = data.get("channel_reminder")
             self.start_time = self.string_to_datetime(data.get("start_time"))
             self.start_event = int(data.get("start_event"))
-            
-            events = data.get("event_times")
-            self.event_times.clear()
+
+            events = data.get('events')
             for event in events:
-                startTime = self.string_to_datetime(event.get("start_time"))
-                endTime = self.string_to_datetime(event.get("end_time"))
+                self.events.append(event)
+            
+            event_times = data.get("event_times")
+            self.event_times.clear()
+            for event_time in event_times:
+                startTime = self.string_to_datetime(event_time.get("start_time"))
+                endTime = self.string_to_datetime(event_time.get("end_time"))
                 self.event_times.append(EventTime(startTime, endTime))
             logging.info('Parsed settings successfully')
             return True
@@ -49,6 +54,7 @@ class Settings():
     def save_settings(self):
         save_data = {
             'token': self.token,
+            'events': self.events,
             'channel_reminder': self.channel_reminder,
             'start_event': self.start_event,
             'start_time': self.start_time.strftime("%B %d %Y, %H:%M:%S"),

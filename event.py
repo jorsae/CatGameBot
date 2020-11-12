@@ -20,13 +20,13 @@ def next(ctx, settings, iterations):
 
         difference = (datetime.utcnow() - next_event).total_seconds()
         event_iterations = math.floor(difference / constants.SIX_HOURS)
-        start_event = (settings.start_event + event_iterations) % 3
-        embed.add_field(name=f'No event is currently running.\nNext event in {time_left}', value=f'Starting event is: {constants.EVENTS[start_event]}')
+        start_event = (settings.start_event + event_iterations) % len(settings.events)
+        embed.add_field(name=f'No event is currently running.\nNext event in {time_left}', value=f'Starting event is: {settings.events[start_event]}')
         return embed
     
     difference = (datetime.utcnow() - settings.start_time).total_seconds()
     event_iterations = math.floor(difference / constants.SIX_HOURS)
-    next_event = (settings.start_event + event_iterations) % 3
+    next_event = (settings.start_event + event_iterations) % len(settings.events)
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
@@ -38,14 +38,14 @@ def next(ctx, settings, iterations):
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
-        embed.add_field(name=f'{constants.EVENTS[next_event]}', value=f'Time remaining: {time_left}')
+        embed.add_field(name=f'{settings.events[next_event]}', value=f'Time remaining: {time_left}')
         iterations -= 1
     
     for i in range(iterations):
         time_left = i * constants.SIX_HOURS + time_difference
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
-        event = (next_event + (i+1)) % 3
-        embed.add_field(name=f'{constants.EVENTS[event]}', value=f'Time until: {time_left}')
+        event = (next_event + (i+1)) % len(settings.events)
+        embed.add_field(name=f'{settings.events[event]}', value=f'Time until: {time_left}')
 
     return embed
 

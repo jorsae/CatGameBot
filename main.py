@@ -114,10 +114,10 @@ async def ping_reminder():
             is_event = should_ping(settings)
             if is_event:
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
-                next_event = (settings.start_event + event_iterations + 1) % 3 # +1 to make it next event and not the current event
-                logging.info(f'[{settings.channel_reminder}] Pinging: {constants.EVENTS[next_event]} ({next_event})')
+                next_event = (settings.start_event + event_iterations + 1) % len(settings.events) # +1 to make it next event and not the current event
+                logging.info(f'[{settings.channel_reminder}] Pinging: {settings.EVENTS[next_event]} ({next_event})')
                 channel = bot.get_channel(settings.channel_reminder)
-                await channel.send(f'{constants.EVENT_PINGS[next_event]} {constants.EVENTS[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                await channel.send(f'{constants.EVENT_PINGS[next_event]} {settings.EVENTS[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
             else:
                 logging.debug(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
@@ -151,6 +151,9 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
-    RockPaperScissors.setup_database()
+    print(f'{settings.events=}')
+    print(f'{constants.EVENTS=}')
+    print(f'{len(constants.EVENTS)=}')
+    # RockPaperScissors.setup_database()
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
