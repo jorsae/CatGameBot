@@ -151,9 +151,6 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
-    print(f'{settings.events=}')
-    print(f'{constants.EVENTS=}')
-    print(f'{len(constants.EVENTS)=}')
-    # RockPaperScissors.setup_database()
+    RockPaperScissors.setup_database()
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
