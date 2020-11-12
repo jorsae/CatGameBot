@@ -7,3 +7,6 @@ EVENT_DURATION = 1800
 WARNING_TIME = 300
 
 DATABASE_FILE = 'CatGameDatabase.db'
+ROCK_NAMES = ['rock', 'r', 'rocks']
+PAPER_NAMES = ['p', 'paper', 'papers']
+SCISSOR_NAMES = ['s', 'scissor', 'scissors']

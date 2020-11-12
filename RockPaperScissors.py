@@ -103,11 +103,11 @@ def get_selection_word(number):
         return "Error"
 
 def get_user_selection(selection):
-    if selection == 'rock' or selection == 'r':
+    if selection in constants.ROCK_NAMES:
         return 0
-    elif selection == 'paper' or selection == 'p':
+    elif selection in constants.PAPER_NAMES:
         return 1
-    elif selection == 'scissors' or selection == 's':
+    elif selection in constants.SCISSOR_NAMES:
         return 2
     else:
         return -1
