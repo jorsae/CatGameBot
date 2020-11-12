@@ -115,9 +115,9 @@ async def ping_reminder():
             if is_event:
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
                 next_event = (settings.start_event + event_iterations + 1) % len(settings.events) # +1 to make it next event and not the current event
-                logging.info(f'[{settings.channel_reminder}] Pinging: {settings.EVENTS[next_event]} ({next_event})')
+                logging.info(f'[{settings.channel_reminder}] Pinging: {settings.events[next_event]} ({next_event})')
                 channel = bot.get_channel(settings.channel_reminder)
-                await channel.send(f'{constants.EVENT_PINGS[next_event]} {settings.EVENTS[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                await channel.send(f'{constants.EVENT_PINGS[next_event]} {settings.events[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
             else:
                 logging.debug(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
