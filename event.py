@@ -184,6 +184,30 @@ def delete_event(ctx, settings, *number):
         logging.error(f'{author} failed to delete: {output}')
         return f'Failed to delete: {output}'
 
+def minievent_list(ctx, settings):
+    embed = discord.Embed(colour=discord.Colour.orange())
+    embed.set_author(name=f'Current minievents order')
+    for event in settings.events:
+        embed.add_field(name=event, value=f'----------------', inline=False)
+    return embed
+
+def delete_minievents(ctx, settings):
+    embed = discord.Embed(colour=discord.Colour.orange())
+    embed.set_author(name=f'Deleted: {len(settings.events)} mini events')
+    settings.events.clear()
+    return embed
+
+def add_minievent(ctx, settings, event):
+    embed = discord.Embed(colour=discord.Colour.orange())
+    settings.events.insert(len(settings.events), event)
+
+    settings_saved = settings.save_settings()
+    saved = 'Saved successfully' if settings_saved else 'Failed to save!'
+    embed.set_author(name=f'Added minievent: {event}.\n{saved}')
+
+    print(f'{settings.events=}')
+    return embed
+
 def number_is_clean(numbers, event_list):
     events = len(event_list) - 1
     for i in numbers:

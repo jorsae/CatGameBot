@@ -83,6 +83,21 @@ async def delete_event(ctx, *number):
     delevent_response = event.delete_event(ctx, settings, *number)
     await ctx.send(delevent_response)
 
+@bot.command(name='minievent', help='Lists the full mini event list', hidden=True)
+async def minievent(ctx):
+    minievent_response = event.minievent_list(ctx, settings)
+    await ctx.send(embed=minievent_response)
+
+@bot.command(name='delminievents', help='Deletes all minievents. Not persistent', hidden=True)
+async def delete_minievents(ctx):
+    delminievents_response = event.delete_minievents(ctx, settings)
+    await ctx.send(embed=delminievents_response)
+
+@bot.command(name='addminievent', help='Adds a new mini event to mini event list. Example: !addminievent "1min crafting"', hidden=True)
+async def add_minievent(ctx, minievent: str):
+    add_response = event.add_minievent(ctx, settings, minievent)
+    await ctx.send(embed=add_response)
+
 @bot.event
 async def on_message(message: discord.Message):
     await bot.wait_until_ready()
