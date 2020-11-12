@@ -88,7 +88,7 @@ async def minievent(ctx):
     minievent_response = event.minievent_list(ctx, settings)
     await ctx.send(embed=minievent_response)
 
-@bot.command(name='delminievents', help='Deletes all minievents. Not persistent', hidden=True)
+@bot.command(name='delminievents', help='Deletes all minievents.', hidden=True)
 async def delete_minievents(ctx):
     delminievents_response = event.delete_minievents(ctx, settings)
     await ctx.send(embed=delminievents_response)

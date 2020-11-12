@@ -193,8 +193,10 @@ def minievent_list(ctx, settings):
 
 def delete_minievents(ctx, settings):
     embed = discord.Embed(colour=discord.Colour.orange())
-    embed.set_author(name=f'Deleted: {len(settings.events)} mini events')
     settings.events.clear()
+    settings_saved = settings.save_settings()
+    saved = 'Saved successfully' if settings_saved else 'Failed to save!'
+    embed.set_author(name=f'Deleted: {len(settings.events)} mini events.\n{saved}')
     return embed
 
 def add_minievent(ctx, settings, event):
