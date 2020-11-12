@@ -22,25 +22,21 @@ bot.remove_command('help')
 
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="3"):
-    logging.info(f'next executed by: {ctx.author}, arg: {iterations}')
     next_embed = event.next(ctx, settings, iterations)
     await ctx.send(embed=next_embed)
 
 @bot.command(name='event', help='Lists current event times')
 async def list_events(ctx):
-    logging.info(f'event executed by: {ctx.author}')
     event_embed = event.list_events(ctx, settings)
     await ctx.send(embed=event_embed)
 
 @bot.command(name='time', aliases=['daily'], help='Lists the time till daily reset')
 async def time(ctx):
-    logging.info(f'time executed by: {ctx.author}')
     time_embed = event.time(ctx)
     await ctx.send(embed=time_embed)
 
 @bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
 async def calculator(ctx):
-    logging.info(f'calculator executed by: {ctx.author}')
     await ctx.send(f'Visit https://CatGameCalculator.com to help your crafting needs')
 
 @bot.command(name='rps', help='Rock paper scissors mini game. !rps help for more details!')
@@ -64,31 +60,26 @@ async def ping(ctx):
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
-    logging.info(f'help executed by: {ctx.author}')
     help_embed = event.help(ctx, settings, bot)
     await ctx.send(embed=help_embed)
 
 @bot.command(name='start', help='Starts ping reminders', hidden=True)
 async def start(ctx):
-    logging.info(f'start executed by: {ctx.author}')
     start_response = event.start(ctx, settings, bot)
     await ctx.send(start_response)
 
 @bot.command(name='stop', help='Stops ping reminders', hidden=True)
 async def stop(ctx):
-    logging.info(f'stop executed by: {ctx.author}')
     stop_response = event.stop(ctx, settings)
     await ctx.send(stop_response)
 
 @bot.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
 async def add_event(ctx, start, stop):
-    logging.info(f'addevent executed by: {ctx.author}')
     addevent_response = event.add_event(ctx, settings, start, stop)
     await ctx.send(addevent_response)
 
 @bot.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3, deletes event nr. 3', hidden=True)
 async def delete_event(ctx, *number):
-    logging.info(f'delevent executed by: {ctx.author}')
     delevent_response = event.delete_event(ctx, settings, *number)
     await ctx.send(delevent_response)
 
@@ -102,6 +93,9 @@ async def on_message(message: discord.Message):
         .replace("‘", "′")
         .replace("’", "′")
     )
+    if message.content.startswith(constants.PREFIX):
+        logging.info(f'[{str(message.author)}] Command: "{message.content}"')
+
     await bot.process_commands(message)
 
 async def ping_reminder():
