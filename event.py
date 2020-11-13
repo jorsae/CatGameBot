@@ -189,15 +189,15 @@ def minievent_list(ctx, settings):
     embed = discord.Embed(colour=discord.Colour.orange())
     embed.set_author(name=f'Current minievents order')
     for minievent in settings.minievents:
-        embed.add_field(name=str(minievent), value=f'----------------', inline=False)
+        embed.add_field(name=minievent.event_name, value=f'{minievent.tag}', inline=False)
     return embed
 
 def delete_minievents(ctx, settings):
     embed = discord.Embed(colour=discord.Colour.orange())
-    settings.minievents.clear()
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
     embed.set_author(name=f'Deleted: {len(settings.minievents)} mini events.\n{saved}')
+    settings.minievents.clear() 
     return embed
 
 def add_minievent(ctx, settings, event_name, tag):

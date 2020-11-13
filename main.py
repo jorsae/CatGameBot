@@ -99,6 +99,10 @@ async def add_minievent(ctx, event_name: str, tag: str):
     add_response = event.add_minievent(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
 
+@bot.command(name="testtag", hidden=True)
+async def testtag(ctx):
+    await ctx.send("<@&689721344455213139>")
+
 @bot.event
 async def on_message(message: discord.Message):
     await bot.wait_until_ready()
