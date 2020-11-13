@@ -11,13 +11,13 @@ def next(ctx, settings, iterations):
     iterations = utility.clean_iterations(iterations)
 
     if len(settings.minievents) <= 0:
-        embed = discord.Embed(colour=discord.Colour.red())
+        embed = discord.Embed(colour=constants.COLOUR_ERROR)
         embed.set_author(name=f'No minievent schedule set.\nPlease let {self.admin} know')
         return embed
 
     if utility.is_event(settings) is False:
         next_event = utility.get_next_event(settings)
-        embed = discord.Embed(colour=discord.Colour.red())
+        embed = discord.Embed(colour=constants.COLOUR_ERROR)
 
         if next_event is None:
             embed.set_author(name='No event is currently running.')
@@ -37,10 +37,10 @@ def next(ctx, settings, iterations):
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
     event_text = 'event' if iterations <= 1 else f'{iterations} events'
-    embed = discord.Embed(colour=discord.Colour.green())
+    embed = discord.Embed(colour=constants.COLOUR_OK)
     embed.set_author(name=f'Next {event_text}')
     
-    # Event is  ly ongoing NOW
+    # Event is currently ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
@@ -59,7 +59,7 @@ def list_events(ctx, settings):
     author = ctx.message.author
     is_admin = utility.is_admin(author, settings)
     
-    embed = discord.Embed(colour=discord.Colour.green())
+    embed = discord.Embed(colour=constants.COLOUR_OK)
     embed.set_author(name=f'Current events [utc]')
 
     now = datetime.utcnow()
@@ -78,7 +78,7 @@ def list_events(ctx, settings):
     return embed
 
 def time(ctx):
-    embed = discord.Embed(colour = discord.Colour.green())
+    embed = discord.Embed(colour=constants.COLOUR_OK)
     embed.set_author(name=f'Cat Game time')
     now = datetime.utcnow()
     seconds = ((24 - now.hour - 1) * 60 * 60) + ((60 - now.minute - 1) * 60) + (60 - now.second)
@@ -92,7 +92,7 @@ def help(ctx, settings, bot):
     author = ctx.message.author
     display_hidden_commands = utility.is_admin(author, settings)
 
-    embed = discord.Embed(colour=discord.Colour.orange())
+    embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
     embed.set_author(name=f'CatGameBot Help')
     last_command = None
     for command in bot.walk_commands():
@@ -191,14 +191,14 @@ def delete_event(ctx, settings, *number):
         return f'Failed to delete: {output}'
 
 def minievent_list(ctx, settings):
-    embed = discord.Embed(colour=discord.Colour.orange())
+    embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
     embed.set_author(name=f'Current minievents order')
     for minievent in settings.minievents:
         embed.add_field(name=minievent.event_name, value=f'{minievent.tag}', inline=False)
     return embed
 
 def delete_minievents(ctx, settings):
-    embed = discord.Embed(colour=discord.Colour.orange())
+    embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
     embed.set_author(name=f'Deleted: {len(settings.minievents)} mini events.\n{saved}')
@@ -206,7 +206,7 @@ def delete_minievents(ctx, settings):
     return embed
 
 def add_minievent(ctx, settings, event_name, tag):
-    embed = discord.Embed(colour=discord.Colour.orange())
+    embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
     settings.minievents.insert(len(settings.minievents), MiniEvent(event_name, tag))
 
     settings_saved = settings.save_settings()

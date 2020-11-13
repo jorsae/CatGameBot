@@ -9,7 +9,7 @@ import constants
 database = SqliteDatabase(constants.DATABASE_FILE)
 
 def help(settings):
-    embed = discord.Embed(colour=discord.Colour.orange(), title='Rock, Paper, Scissors Help')
+    embed = discord.Embed(colour=constants.COLOUR_NEUTRAL, title='Rock, Paper, Scissors Help')
     embed.add_field(name=f'{settings.prefix}rps help', value='To display this message', inline=False)
     embed.add_field(name=f'{settings.prefix}rps rank', value='To display the top ranks', inline=False)
     embed.add_field(name=f'{settings.prefix}rps profile', value='To view your stats', inline=False)
@@ -22,7 +22,7 @@ def rank():
     try:
         query = RockPaperScissorsModel.select(RockPaperScissorsModel).order_by(RockPaperScissorsModel.wins.desc()).limit(10)
         
-        embed = discord.Embed(colour=discord.Colour.orange(), title=f'Rock, Paper, Scissors Rankings!')
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL, title=f'Rock, Paper, Scissors Rankings!')
         rank = 1
         for user in query:
             embed.add_field(name=f'{rank}. {user.username}: {user.wins} wins', value=f'Draw: {user.draw}, Loss: {user.loss}', inline=False)
@@ -30,28 +30,28 @@ def rank():
         return embed
     except Exception as e:
         logging.critical(f'RockPaperScissors.profile: {e}')
-    embed = discord.Embed(colour=discord.Colour.red(), title=f'Error')
+    embed = discord.Embed(colour=constants.COLOUR_ERROR, title=f'Error')
     return embed
 
 def profile(author):
     try:
         user = RockPaperScissorsModel.get(RockPaperScissorsModel.user_id == author.id)
-        embed = discord.Embed(colour=discord.Colour.orange(), title=f'{str(author.name)} Profile')
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL, title=f'{str(author.name)} Profile')
         embed.add_field(name=f"Wins: {user.wins}, Loss: {user.loss}, Draw: {user.draw}", value=f'Total games played: {user.wins+user.loss+user.draw}\nLast game played: {user.last_played}\nFirst game played: {user.created_date}')
         return embed
     except DoesNotExist:
-        embed = discord.Embed(colour=discord.Colour.orange(), title=f'{str(author.name)} Profile')
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL, title=f'{str(author.name)} Profile')
         embed.add_field(name=f'You have not played any games!', value=f'"{constants.PREFIX}rps help" to get started')
         return embed
     except Exception as e:
         logging.critical(f'RockPaperScissors.profile: {e}')
-    embed = discord.Embed(colour=discord.Colour.red(), title=f'Error')
+    embed = discord.Embed(colour=constants.COLOUR_ERROR, title=f'Error')
     return embed
 
 def game(author, selection):
     user_selection = get_user_selection(selection)
     if user_selection == -1:
-        embed = discord.Embed(colour=discord.Colour.red())
+        embed = discord.Embed(colour=constants.COLOUR_ERROR)
         embed.set_author(name=f'Rock, Paper, Scissors Error')
         embed.add_field(name="You need to make a valid selection", value='Selections are: "rock", "paper" or "scissors"')
         return embed
@@ -62,19 +62,19 @@ def game(author, selection):
     result = simulate(user_selection, comp_selection)
     embed = None
     if result:
-        embed = discord.Embed(colour=discord.Colour.green(),
+        embed = discord.Embed(colour=constants.COLOUR_OK,
                             title=f"You won!\nYou {get_selection_word(user_selection)} vs {get_selection_word(comp_selection)} CatGameBot")
         RockPaperScissorsModel.update(wins=RockPaperScissorsModel.wins + 1,
                                     last_played=datetime.datetime.now()).where(
                                     RockPaperScissorsModel.username == str(author)).execute()
     elif result is False:
-        embed = discord.Embed(colour=discord.Colour.red(),
+        embed = discord.Embed(colour=constants.COLOUR_ERROR,
                             title=f"You lost!\nYou {get_selection_word(user_selection)} vs {get_selection_word(comp_selection)} CatGameBot")
         RockPaperScissorsModel.update(loss=RockPaperScissorsModel.loss + 1,
                                     last_played=datetime.datetime.now()).where(
                                     RockPaperScissorsModel.username == str(author)).execute()
     else:
-        embed = discord.Embed(colour=discord.Colour.orange(),
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL,
                             title=f"You drew!\nYou {get_selection_word(user_selection)} vs {get_selection_word(comp_selection)} CatGameBot")
         RockPaperScissorsModel.update(draw=RockPaperScissorsModel.draw + 1,
                                     last_played=datetime.datetime.now()).where(
