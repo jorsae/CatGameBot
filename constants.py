@@ -16,7 +16,7 @@ EVENT_DURATION = 1800
 WARNING_TIME = 300
 
 # Rock, Paper, Scissors 
-DATABASE_FILE = 'CatGameDatabase.db'
+DATABASE_FILE = '../CatGameDatabase.db'
 ROCK_NAMES = ['r', 'rock', 'rocks']
 PAPER_NAMES = ['p', 'paper', 'papers']
 SCISSOR_NAMES = ['s', 'scissor', 'scissors']
