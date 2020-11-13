@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 import constants
 import utility
-from event_time import EventTime
+from EventTime import EventTime
 from MiniEvent import MiniEvent
 
 def next(ctx, settings, iterations):

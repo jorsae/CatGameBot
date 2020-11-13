@@ -1,6 +1,6 @@
 from datetime import datetime
 from MiniEvent import MiniEvent
-from event_time import EventTime
+from EventTime import EventTime
 import json
 import logging
 

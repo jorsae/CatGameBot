@@ -12,10 +12,6 @@ import event
 import utility
 import constants
 
-# per server prefixes
-# https://stackoverflow.com/questions/51915962/per-server-prefixs
-# Need to store: channel_id, prefix, channel_reminder, reaction_role_post, reaction_role_id, status (if they have set up reaction_role_post, etc)
-
 settings = Settings('settings.json')
 bot = commands.Bot(command_prefix=constants.PREFIX)
 bot.remove_command('help')
@@ -95,7 +91,6 @@ async def delete_minievents(ctx):
 
 @bot.command(name='addminievent', help='Adds a new mini event to mini event list. Example: !addminievent "1min crafting"', hidden=True)
 async def add_minievent(ctx, event_name: str, tag: str):
-    print(f'add_minievent: {event_name=}, {tag=}')
     add_response = event.add_minievent(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
 
