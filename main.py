@@ -89,7 +89,7 @@ async def delete_minievents(ctx):
     delminievents_response = commands.delete_minievents(ctx, settings)
     await ctx.send(embed=delminievents_response)
 
-@bot.command(name='addminievent', help='Adds a new mini event to the minievent schedule. Example: !addminievent "1min crafting"', hidden=True)
+@bot.command(name='addminievent', help='Adds a new mini event to the minievent schedule. Example: !addminievent "1min crafting" <@&689721344455213139>', hidden=True)
 async def add_minievent(ctx, event_name: str, tag: str):
     add_response = commands.add_minievent(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
