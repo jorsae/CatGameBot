@@ -4,31 +4,31 @@ import asyncio
 import os
 import logging
 from datetime import datetime, timedelta
-from discord.ext import commands
+from discord.ext import commands as discord_commands
 
 from settings import Settings
 import RockPaperScissors
-import event
+import commands
 import utility
 import constants
 
 settings = Settings('settings.json')
-bot = commands.Bot(command_prefix=constants.DEFAULT_PREFIX)
+bot = discord_commands.Bot(command_prefix=constants.DEFAULT_PREFIX)
 bot.remove_command('help')
 
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
 async def next(ctx, iterations: str="3"):
-    next_embed = event.next(ctx, settings, iterations)
+    next_embed = commands.next(ctx, settings, iterations)
     await ctx.send(embed=next_embed)
 
 @bot.command(name='event', help='Lists current event times')
 async def list_events(ctx):
-    event_embed = event.list_events(ctx, settings)
+    event_embed = commands.list_events(ctx, settings)
     await ctx.send(embed=event_embed)
 
 @bot.command(name='time', aliases=['daily'], help='Lists the time till daily reset')
 async def time(ctx):
-    time_embed = event.time(ctx)
+    time_embed = commands.time(ctx)
     await ctx.send(embed=time_embed)
 
 @bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
@@ -56,42 +56,42 @@ async def ping(ctx):
 
 @bot.command(name='help', help='Displays this help message')
 async def help(ctx):
-    help_embed = event.help(ctx, settings, bot)
+    help_embed = commands.help(ctx, settings, bot)
     await ctx.send(embed=help_embed)
 
 @bot.command(name='start', help='Starts ping reminders', hidden=True)
 async def start(ctx):
-    start_response = event.start(ctx, settings, bot)
+    start_response = commands.start(ctx, settings, bot)
     await ctx.send(start_response)
 
 @bot.command(name='stop', help='Stops ping reminders', hidden=True)
 async def stop(ctx):
-    stop_response = event.stop(ctx, settings)
+    stop_response = commands.stop(ctx, settings)
     await ctx.send(stop_response)
 
 @bot.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
 async def add_event(ctx, start, stop):
-    addevent_response = event.add_event(ctx, settings, start, stop)
+    addevent_response = commands.add_event(ctx, settings, start, stop)
     await ctx.send(addevent_response)
 
 @bot.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3, deletes event nr. 3', hidden=True)
 async def delete_event(ctx, *number):
-    delevent_response = event.delete_event(ctx, settings, *number)
+    delevent_response = commands.delete_event(ctx, settings, *number)
     await ctx.send(delevent_response)
 
 @bot.command(name='minievent', help='Lists the full mini event list', hidden=True)
 async def minievent(ctx):
-    minievent_response = event.minievent_list(ctx, settings)
+    minievent_response = commands.minievent_list(ctx, settings)
     await ctx.send(embed=minievent_response)
 
 @bot.command(name='delminievents', help='Deletes all minievents.', hidden=True)
 async def delete_minievents(ctx):
-    delminievents_response = event.delete_minievents(ctx, settings)
+    delminievents_response = commands.delete_minievents(ctx, settings)
     await ctx.send(embed=delminievents_response)
 
 @bot.command(name='addminievent', help='Adds a new mini event to mini event list. Example: !addminievent "1min crafting"', hidden=True)
 async def add_minievent(ctx, event_name: str, tag: str):
-    add_response = event.add_minievent(ctx, settings, event_name, tag)
+    add_response = commands.add_minievent(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
 
 @bot.command(name="testtag", hidden=True)
