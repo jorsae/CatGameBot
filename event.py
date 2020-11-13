@@ -96,7 +96,7 @@ def help(ctx, settings, bot):
             continue
         if command.hidden is False or display_hidden_commands:
             if last_command != str(command):
-                embed.add_field(name=f'{constants.PREFIX}{command}', value=command.help, inline=False)
+                embed.add_field(name=f'{settings.prefix}{command}', value=command.help, inline=False)
             last_command = str(command)
     return embed
 

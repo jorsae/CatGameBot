@@ -1,3 +1,4 @@
+import constants
 from datetime import datetime
 from MiniEvent import MiniEvent
 from EventTime import EventTime
@@ -7,6 +8,7 @@ import logging
 class Settings():
     def __init__(self, settings_file):
         self.settings_file = settings_file
+        self.prefix = constants.DEFAULT_PREFIX
         self.admin = None
         self.minievents = []
         self.channel_reminder = None
@@ -30,6 +32,7 @@ class Settings():
         try:
             with open(self.settings_file, 'r') as f:
                 data = json.loads(f.read())
+            self.prefix = data.get("prefix")
             self.token = data.get("token")
             self.admin = data.get("admin")
             self.channel_reminder = data.get("channel_reminder")
@@ -56,6 +59,7 @@ class Settings():
     
     def save_settings(self):
         save_data = {
+            'prefix': self.prefix,
             'token': self.token,
             "minievents": [minievent.__dict__ for minievent in self.minievents],
             'channel_reminder': self.channel_reminder,

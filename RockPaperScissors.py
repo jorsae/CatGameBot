@@ -8,14 +8,14 @@ import constants
 
 database = SqliteDatabase(constants.DATABASE_FILE)
 
-def help():
+def help(settings):
     embed = discord.Embed(colour=discord.Colour.orange(), title='Rock, Paper, Scissors Help')
-    embed.add_field(name=f'{constants.PREFIX}rps help', value='To display this message', inline=False)
-    embed.add_field(name=f'{constants.PREFIX}rps rank', value='To display the top ranks', inline=False)
-    embed.add_field(name=f'{constants.PREFIX}rps profile', value='To view your stats', inline=False)
-    embed.add_field(name=f'{constants.PREFIX}rps rock', value='To select rock', inline=False)
-    embed.add_field(name=f'{constants.PREFIX}rps paper', value='To select paper', inline=False)
-    embed.add_field(name=f'{constants.PREFIX}rps scissors', value='To select scissors', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps help', value='To display this message', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps rank', value='To display the top ranks', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps profile', value='To view your stats', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps rock', value='To select rock', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps paper', value='To select paper', inline=False)
+    embed.add_field(name=f'{settings.prefix}rps scissors', value='To select scissors', inline=False)
     return embed
 
 def rank():

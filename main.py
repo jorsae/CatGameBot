@@ -13,7 +13,7 @@ import utility
 import constants
 
 settings = Settings('settings.json')
-bot = commands.Bot(command_prefix=constants.PREFIX)
+bot = commands.Bot(command_prefix=constants.DEFAULT_PREFIX)
 bot.remove_command('help')
 
 @bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
@@ -40,7 +40,7 @@ async def rps(ctx, selection: str='help'):
     selection = selection.lower()
     embed = None
     if selection == 'help':
-        embed = RockPaperScissors.help()
+        embed = RockPaperScissors.help(settings)
     elif selection == 'rank' or selection == 'ranks':
         embed = RockPaperScissors.rank()
     elif selection == 'profile':
@@ -108,7 +108,7 @@ async def on_message(message: discord.Message):
         .replace("‘", "′")
         .replace("’", "′")
     )
-    if message.content.startswith(constants.PREFIX):
+    if message.content.startswith(settings.prefix):
         logging.info(f'[{str(message.author)}] Command: "{message.content}"')
 
     await bot.process_commands(message)
@@ -160,6 +160,7 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
+    bot.command_prefix = settings.prefix
     RockPaperScissors.setup_database()
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
