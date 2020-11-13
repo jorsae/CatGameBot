@@ -45,7 +45,7 @@ def next(ctx, settings, iterations):
     for i in range(iterations):
         time_left = i * constants.SIX_HOURS + time_difference
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
-        event = (next_event + (i+1)) % len(settings.events)
+        event = (next_event + (i+1)) % len(settings.minievents)
         embed.add_field(name=f'{settings.events[event]}', value=f'Time until: {time_left}')
 
     return embed
