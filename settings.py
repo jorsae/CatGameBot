@@ -40,17 +40,19 @@ class Settings():
             self.start_event = int(data.get("start_event"))
 
             minievents = data.get('minievents')
-            for minievent in minievents:
-                event_name = minievent.get("event_name")
-                tag = minievent.get("tag")
-                self.minievents.append(MiniEvent(event_name, tag))
+            if minievents is not None:
+                for minievent in minievents:
+                    event_name = minievent.get("event_name")
+                    tag = minievent.get("tag")
+                    self.minievents.append(MiniEvent(event_name, tag))
             
             event_times = data.get("event_times")
             self.event_times.clear()
-            for event_time in event_times:
-                startTime = self.string_to_datetime(event_time.get("start_time"))
-                endTime = self.string_to_datetime(event_time.get("end_time"))
-                self.event_times.append(EventTime(startTime, endTime))
+            if event_times is not None:
+                for event_time in event_times:
+                    startTime = self.string_to_datetime(event_time.get("start_time"))
+                    endTime = self.string_to_datetime(event_time.get("end_time"))
+                    self.event_times.append(EventTime(startTime, endTime))
             logging.info('Parsed settings successfully')
             return True
         except Exception as e:
