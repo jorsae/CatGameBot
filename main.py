@@ -119,6 +119,12 @@ async def ping_reminder():
         settings.is_running_ping_reminder = True
         difference = (datetime.utcnow() - settings.start_time).total_seconds()
         time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
+
+        if len(settings.minievents) <= 0:
+            logging.critical('No minievent schedule is set. Sleeping 5min, then checking again')
+            await asyncio.sleep(constants.WARNING_TIME)
+            continue
+
         if time_difference <= constants.WARNING_TIME:
             is_event = should_ping(settings)
             if is_event:
@@ -129,7 +135,7 @@ async def ping_reminder():
                 channel = bot.get_channel(settings.channel_reminder)
                 await channel.send(f'{minievent.tag} {minievent.event_name} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
             else:
-                logging.debug(f'No event is ongoing')
+                logging.info(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
         else:
             sleep_time = time_difference - constants.WARNING_TIME
@@ -139,7 +145,7 @@ async def ping_reminder():
     settings.is_running_ping_reminder = False
 
 def should_ping(settings):
-    if utility.is_event(settings):
+    if utility.is_event_with_date(settings, datetime.utcnow() + timedelta(seconds=constants.WARNING_TIME)):
         return True
     return False
 

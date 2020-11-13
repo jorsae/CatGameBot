@@ -10,6 +10,11 @@ from MiniEvent import MiniEvent
 def next(ctx, settings, iterations):
     iterations = utility.clean_iterations(iterations)
 
+    if len(settings.minievents) <= 0:
+        embed = discord.Embed(colour=discord.Colour.red())
+        embed.set_author(name=f'No minievent schedule set.\nPlease let {self.admin} know')
+        return embed
+
     if utility.is_event(settings) is False:
         next_event = utility.get_next_event(settings)
         embed = discord.Embed(colour=discord.Colour.red())
@@ -35,7 +40,7 @@ def next(ctx, settings, iterations):
     embed = discord.Embed(colour=discord.Colour.green())
     embed.set_author(name=f'Next {event_text}')
     
-    # Event is currently ongoing NOW
+    # Event is  ly ongoing NOW
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
@@ -135,7 +140,7 @@ def add_event(ctx, settings, start, stop):
     try:
         # Because it's parsed as aest, I have to remove 1day so it matches utc and therefore matches the in game times
         startTime = datetime.strptime(f'{start} 00:00:00', '%Y-%m-%d %H:%M:%S')
-        stopTime = datetime.strptime(f'{stop} 18:30:00', '%Y-%m-%d %H:%M:%S')
+        stopTime = datetime.strptime(f'{stop} 19:00:00', '%Y-%m-%d %H:%M:%S')
 
         settings.event_times.append(EventTime(startTime, stopTime))
         settings_saved = settings.save_settings()
