@@ -94,8 +94,9 @@ async def delete_minievents(ctx):
     await ctx.send(embed=delminievents_response)
 
 @bot.command(name='addminievent', help='Adds a new mini event to mini event list. Example: !addminievent "1min crafting"', hidden=True)
-async def add_minievent(ctx, minievent: str):
-    add_response = event.add_minievent(ctx, settings, minievent)
+async def add_minievent(ctx, event_name: str, tag: str):
+    print(f'add_minievent: {event_name=}, {tag=}')
+    add_response = event.add_minievent(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
 
 @bot.event
@@ -123,10 +124,10 @@ async def ping_reminder():
             is_event = should_ping(settings)
             if is_event:
                 event_iterations = math.floor(difference / constants.SIX_HOURS)
-                next_event = (settings.start_event + event_iterations + 1) % len(settings.events) # +1 to make it next event and not the current event
-                logging.info(f'[{settings.channel_reminder}] Pinging: {settings.events[next_event]} ({next_event})')
+                next_event = (settings.start_event + event_iterations + 1) % len(settings.minievents) # +1 to make it next event and not the current event
+                logging.info(f'[{settings.channel_reminder}] Pinging: {settings.minievents[next_event]} ({next_event})')
                 channel = bot.get_channel(settings.channel_reminder)
-                await channel.send(f'{constants.EVENT_PINGS[next_event]} {settings.events[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                await channel.send(f'{constants.EVENT_PINGS[next_event]} {settings.minievents[next_event]} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
             else:
                 logging.debug(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)

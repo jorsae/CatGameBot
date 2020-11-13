@@ -1,4 +1,5 @@
 from datetime import datetime
+from MiniEvent import MiniEvent
 from event_time import EventTime
 import json
 import logging
@@ -7,7 +8,7 @@ class Settings():
     def __init__(self, settings_file):
         self.settings_file = settings_file
         self.admin = None
-        self.events = []
+        self.minievents = []
         self.channel_reminder = None
         self.token = None
         self.event_times = []
@@ -35,9 +36,11 @@ class Settings():
             self.start_time = self.string_to_datetime(data.get("start_time"))
             self.start_event = int(data.get("start_event"))
 
-            events = data.get('events')
-            for event in events:
-                self.events.append(event)
+            minievents = data.get('minievents')
+            for minievent in minievents:
+                event_name = minievent.get("event_name")
+                tag = minievent.get("tag")
+                self.minievents.append(MiniEvent(event_name, tag))
             
             event_times = data.get("event_times")
             self.event_times.clear()
@@ -54,7 +57,7 @@ class Settings():
     def save_settings(self):
         save_data = {
             'token': self.token,
-            'events': self.events,
+            "minievents": [minievent.__dict__ for minievent in self.minievents],
             'channel_reminder': self.channel_reminder,
             'start_event': self.start_event,
             'start_time': self.start_time.strftime("%B %d %Y, %H:%M:%S"),

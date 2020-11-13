@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import constants
 import utility
 from event_time import EventTime
+from MiniEvent import MiniEvent
 
 def next(ctx, settings, iterations):
     iterations = utility.clean_iterations(iterations)
@@ -20,13 +21,13 @@ def next(ctx, settings, iterations):
 
         difference = (datetime.utcnow() - next_event).total_seconds()
         event_iterations = math.floor(difference / constants.SIX_HOURS)
-        start_event = (settings.start_event + event_iterations) % len(settings.events)
-        embed.add_field(name=f'No event is currently running.\nNext event in {time_left}', value=f'Starting event is: {settings.events[start_event]}')
+        start_event = (settings.start_event + event_iterations) % len(settings.minievents)
+        embed.add_field(name=f'No event is currently running.\nNext event in {time_left}', value=f'Starting event is: {settings.minievents[start_event]}')
         return embed
     
     difference = (datetime.utcnow() - settings.start_time).total_seconds()
     event_iterations = math.floor(difference / constants.SIX_HOURS)
-    next_event = (settings.start_event + event_iterations) % len(settings.events)
+    next_event = (settings.start_event + event_iterations) % len(settings.minievents)
 
     time_difference = constants.SIX_HOURS - (difference % constants.SIX_HOURS)
     
@@ -38,7 +39,7 @@ def next(ctx, settings, iterations):
     if (constants.SIX_HOURS - time_difference) < 1800:
         time_left = constants.EVENT_DURATION - (constants.SIX_HOURS - time_difference)
         time_left = utility.format_timedelta(timedelta(seconds=time_left))
-        embed.add_field(name=f'{settings.events[next_event]}', value=f'Time remaining: {time_left}')
+        embed.add_field(name=f'{settings.minievents[next_event]}', value=f'Time remaining: {time_left}')
         iterations -= 1
     
     for i in range(iterations):
@@ -187,25 +188,25 @@ def delete_event(ctx, settings, *number):
 def minievent_list(ctx, settings):
     embed = discord.Embed(colour=discord.Colour.orange())
     embed.set_author(name=f'Current minievents order')
-    for event in settings.events:
-        embed.add_field(name=event, value=f'----------------', inline=False)
+    for minievent in settings.minievents:
+        embed.add_field(name=str(minievent), value=f'----------------', inline=False)
     return embed
 
 def delete_minievents(ctx, settings):
     embed = discord.Embed(colour=discord.Colour.orange())
-    settings.events.clear()
+    settings.minievents.clear()
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-    embed.set_author(name=f'Deleted: {len(settings.events)} mini events.\n{saved}')
+    embed.set_author(name=f'Deleted: {len(settings.minievents)} mini events.\n{saved}')
     return embed
 
-def add_minievent(ctx, settings, event):
+def add_minievent(ctx, settings, event_name, tag):
     embed = discord.Embed(colour=discord.Colour.orange())
-    settings.events.insert(len(settings.events), event)
+    settings.minievents.insert(len(settings.minievents), MiniEvent(event_name, tag))
 
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-    embed.set_author(name=f'Added minievent: {event}.\n{saved}')
+    embed.set_author(name=f'Added minievent: {event_name}.\n{saved}')
     return embed
 
 def number_is_clean(numbers, event_list):
