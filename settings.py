@@ -1,6 +1,6 @@
 import constants
 from datetime import datetime
-from MiniEvent import MiniEvent
+from Bonus import Bonus
 from EventTime import EventTime
 import json
 import logging
@@ -41,10 +41,10 @@ class Settings():
 
             minievents = data.get('minievents')
             if minievents is not None:
-                for minievent in minievents:
-                    event_name = minievent.get("event_name")
-                    tag = minievent.get("tag")
-                    self.minievents.append(MiniEvent(event_name, tag))
+                for bonus in minievents:
+                    event_name = bonus.get("event_name")
+                    tag = bonus.get("tag")
+                    self.minievents.append(Bonus(event_name, tag))
             
             event_times = data.get("event_times")
             self.event_times.clear()
@@ -63,7 +63,7 @@ class Settings():
         save_data = {
             'prefix': self.prefix,
             'token': self.token,
-            "minievents": [minievent.__dict__ for minievent in self.minievents],
+            "minievents": [bonus.__dict__ for bonus in self.minievents],
             'channel_reminder': self.channel_reminder,
             'start_event': self.start_event,
             'start_time': self.start_time.strftime("%B %d %Y, %H:%M:%S"),

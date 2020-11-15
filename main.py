@@ -79,19 +79,19 @@ async def delete_event(ctx, *number):
     delevent_response = commands.delete_event(ctx, settings, *number)
     await ctx.send(delevent_response)
 
-@bot.command(name='minievent', help='Lists the full mini event list', hidden=True)
-async def minievent(ctx):
-    minievent_response = commands.minievent_list(ctx, settings)
-    await ctx.send(embed=minievent_response)
+@bot.command(name='bonus', help='Lists the full bonus schedule', hidden=True)
+async def bonus_list(ctx):
+    bonus_response = commands.bonus_list(ctx, settings)
+    await ctx.send(embed=bonus_response)
 
-@bot.command(name='delminievents', help='Clears the minievent schedule', hidden=True)
-async def delete_minievents(ctx):
-    delminievents_response = commands.delete_minievents(ctx, settings)
-    await ctx.send(embed=delminievents_response)
+@bot.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
+async def bonus_delete(ctx):
+    delbonus_response = commands.bonus_delete(ctx, settings)
+    await ctx.send(embed=delbonus_response)
 
-@bot.command(name='addminievent', help='Adds a new mini event to the minievent schedule. Example: !addminievent "1min crafting" <@&689721344455213139>', hidden=True)
-async def add_minievent(ctx, event_name: str, tag: str):
-    add_response = commands.add_minievent(ctx, settings, event_name, tag)
+@bot.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
+async def bonus_add(ctx, event_name: str, tag: str):
+    add_response = commands.bonus_add(ctx, settings, event_name, tag)
     await ctx.send(embed=add_response)
 
 @bot.command(name="testtag", hidden=True)
@@ -167,6 +167,7 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
+    print(f'{settings.prefix=}')
     bot.command_prefix = settings.prefix
     RockPaperScissors.setup_database()
     bot.loop.create_task(do_tasks())

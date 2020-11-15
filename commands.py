@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 import constants
 import utility
 from EventTime import EventTime
-from MiniEvent import MiniEvent
+from Bonus import Bonus
 
 def next(ctx, settings, iterations):
     iterations = utility.clean_iterations(iterations)
@@ -190,28 +190,28 @@ def delete_event(ctx, settings, *number):
         logging.error(f'{author} failed to delete: {output}')
         return f'Failed to delete: {output}'
 
-def minievent_list(ctx, settings):
+def bonus_list(ctx, settings):
     embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-    embed.set_author(name=f'Current minievents order')
-    for minievent in settings.minievents:
-        embed.add_field(name=minievent.event_name, value=f'{minievent.tag}', inline=False)
+    embed.set_author(name=f'Current bonus order')
+    for bonus in settings.minievents:
+        embed.add_field(name=bonus.event_name, value=f'{bonus.tag}', inline=False)
     return embed
 
-def delete_minievents(ctx, settings):
+def bonus_delete(ctx, settings):
     embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-    embed.set_author(name=f'Deleted: {len(settings.minievents)} mini events.\n{saved}')
+    embed.set_author(name=f'Deleted: {len(settings.minievents)} bonus.\n{saved}')
     settings.minievents.clear() 
     return embed
 
-def add_minievent(ctx, settings, event_name, tag):
+def bonus_add(ctx, settings, event_name, tag):
     embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-    settings.minievents.insert(len(settings.minievents), MiniEvent(event_name, tag))
+    settings.minievents.insert(len(settings.minievents), Bonus(event_name, tag))
 
     settings_saved = settings.save_settings()
     saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-    embed.set_author(name=f'Added minievent: {event_name}.\n{saved}')
+    embed.set_author(name=f'Added bonus: {event_name}.\n{saved}')
     return embed
 
 def number_is_clean(numbers, event_list):
