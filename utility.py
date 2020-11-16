@@ -62,3 +62,21 @@ def format_timedelta(tdelta):
         return f'{days} {dayPlural}, {hours}:{minutes}:{seconds}'
     else:
         return f'{hours}:{minutes}:{seconds}'
+
+# Cleans up bonus schedule. i.e: if a bonus in the middle is deleted.
+def number_is_clean(numbers, event_list):
+    events = len(event_list) - 1
+    for i in numbers:
+        if i > events or i < 0:
+            return False
+    return True
+
+# Convers list of digits with type str to type int
+def clean_number_input(number):
+    numbers = []
+    for i in enumerate(number):
+        try:
+            numbers.append(int(i[1]))
+        except:
+            return None
+    return numbers

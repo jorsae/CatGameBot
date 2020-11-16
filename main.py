@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from discord.ext import commands as discord_commands
 
 from settings import Settings
+from AdminCog import AdminCog
 import RockPaperScissors
 import commands
 import utility
@@ -58,45 +59,6 @@ async def ping(ctx):
 async def help(ctx):
     help_embed = commands.help(ctx, settings, bot)
     await ctx.send(embed=help_embed)
-
-@bot.command(name='start', help='Starts ping reminders', hidden=True)
-async def start(ctx):
-    start_response = commands.start(ctx, settings, bot)
-    await ctx.send(start_response)
-
-@bot.command(name='stop', help='Stops ping reminders', hidden=True)
-async def stop(ctx):
-    stop_response = commands.stop(ctx, settings)
-    await ctx.send(stop_response)
-
-@bot.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
-async def add_event(ctx, start, stop):
-    addevent_response = commands.add_event(ctx, settings, start, stop)
-    await ctx.send(addevent_response)
-
-@bot.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3, deletes event nr. 3', hidden=True)
-async def delete_event(ctx, *number):
-    delevent_response = commands.delete_event(ctx, settings, *number)
-    await ctx.send(delevent_response)
-
-@bot.command(name='bonus', help='Lists the full bonus schedule', hidden=True)
-async def bonus_list(ctx):
-    bonus_response = commands.bonus_list(ctx, settings)
-    await ctx.send(embed=bonus_response)
-
-@bot.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
-async def bonus_delete(ctx):
-    delbonus_response = commands.bonus_delete(ctx, settings)
-    await ctx.send(embed=delbonus_response)
-
-@bot.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
-async def bonus_add(ctx, event_name: str, tag: str):
-    add_response = commands.bonus_add(ctx, settings, event_name, tag)
-    await ctx.send(embed=add_response)
-
-@bot.command(name="testtag", hidden=True)
-async def testtag(ctx):
-    await ctx.send("<@&689721344455213139>")
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -170,5 +132,8 @@ if __name__ == '__main__':
     print(f'{settings.prefix=}')
     bot.command_prefix = settings.prefix
     RockPaperScissors.setup_database()
+    
+    bot.add_cog(AdminCog(bot, settings))
+
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
