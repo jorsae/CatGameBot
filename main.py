@@ -95,7 +95,8 @@ async def ping_reminder():
                 minievent = settings.minievents[next_minievent]
                 logging.info(f'[{settings.channel_reminder}] Pinging: {minievent.event_name} ({minievent.tag})')
                 channel = bot.get_channel(settings.channel_reminder)
-                await channel.send(f'{minievent.tag} {minievent.event_name} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                msg = await channel.send(f'{minievent.tag} {minievent.event_name} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                await msg.publish()
             else:
                 logging.info(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
@@ -129,7 +130,6 @@ def setup_logging():
 if __name__ == '__main__':
     setup_logging()
     settings.parse_settings()
-    print(f'{settings.prefix=}')
     bot.command_prefix = settings.prefix
     RockPaperScissors.setup_database()
     
