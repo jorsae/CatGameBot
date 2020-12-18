@@ -38,8 +38,6 @@ class AdminCog(commands.Cog):
 
     @commands.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
     async def add_event(self, ctx, start, stop):
-        print(f'{start=}')
-        print(f'{stop=}')
         is_admin = utility.is_admin(ctx.message.author, self.settings)
         if is_admin is False:
             return
