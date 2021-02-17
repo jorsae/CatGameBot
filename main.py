@@ -94,9 +94,12 @@ async def ping_reminder():
                 next_minievent = (settings.start_event + event_iterations + 1) % len(settings.minievents) # +1 to make it next event and not the current event
                 minievent = settings.minievents[next_minievent]
                 logging.info(f'[{settings.channel_reminder}] Pinging: {minievent.event_name} ({minievent.tag})')
-                channel = bot.get_channel(settings.channel_reminder)
-                msg = await channel.send(f'{minievent.tag} {minievent.event_name} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
-                await msg.publish()
+                try:
+                    channel = bot.get_channel(settings.channel_reminder)
+                    msg = await channel.send(f'{minievent.tag} {minievent.event_name} in {utility.format_timedelta(timedelta(seconds=time_difference))}')
+                    await msg.publish()
+                except Exception as e:
+                    logging.critical(f'Failed to publish for event')
             else:
                 logging.info(f'No event is ongoing')
             await asyncio.sleep(constants.WARNING_TIME)
