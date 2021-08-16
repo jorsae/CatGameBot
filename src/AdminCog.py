@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 import constants
@@ -45,7 +45,7 @@ class AdminCog(commands.Cog):
         # Syntax: !addevent 2020-10-06 2020-16-06
         try:
             # Because it's parsed as aest, I have to remove 1day so it matches utc and therefore matches the in game times
-            startTime = datetime.strptime(f'{start} 00:00:00', '%Y-%m-%d %H:%M:%S')
+            startTime = datetime.strptime(f'{start} 00:00:00', '%Y-%m-%d %H:%M:%S') + timedelta(days=1)
             stopTime = datetime.strptime(f'{stop} 19:00:00', '%Y-%m-%d %H:%M:%S')
 
             self.settings.event_times.append(EventTime(startTime, stopTime))
