@@ -123,7 +123,7 @@ async def do_tasks():
         bot.loop.create_task(ping_reminder())
 
 def setup_logging():
-    logFolder = 'logs'
+    logFolder = '../logs'
     logFile = 'CatGameBot.log'
     if not os.path.isdir(logFolder):
         os.makedirs(logFolder)
