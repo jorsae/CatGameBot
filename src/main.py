@@ -13,7 +13,7 @@ import commands
 import utility
 import constants
 
-settings = Settings('./settings.json')
+settings = Settings('../settings.json')
 bot = discord_commands.Bot(command_prefix=constants.DEFAULT_PREFIX)
 bot.remove_command('help')
 
