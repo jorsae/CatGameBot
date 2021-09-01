@@ -86,26 +86,3 @@ class Moderator(commands.Cog):
         for bonus in self.settings.minievents:
             embed.add_field(name=bonus.event_name, value=f'{bonus.tag}', inline=False)
         await ctx.send(embed=embed)
-
-    @is_moderator()
-    @commands.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
-    async def bonus_delete(self, ctx):
-        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-        settings_saved = self.settings.save_settings()
-        saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-        embed.set_author(name=f'Deleted: {len(self.settings.minievents)} bonus.\n{saved}')
-        self.settings.minievents.clear() 
-
-        await ctx.send(embed=embed)
-
-    @is_moderator()
-    @commands.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
-    async def bonus_add(self, ctx, event_name: str, tag: str):
-        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-        self.settings.minievents.insert(len(self.settings.minievents), Bonus(event_name, tag))
-
-        settings_saved = self.settings.save_settings()
-        saved = 'Saved successfully' if settings_saved else 'Failed to save!'
-        embed.set_author(name=f'Added bonus: {event_name}.\n{saved}')
-        
-        await ctx.send(embed=embed)

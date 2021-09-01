@@ -18,14 +18,29 @@ class Admin(commands.Cog):
             return ctx.message.author.id in constants.ADMIN_LIST
         return commands.check(predicate)
     
-    def is_moderator():
-        def predicate(ctx):
-            is_admin = ctx.message.author.id in constants.ADMIN_LIST
-            if is_admin:
-                return True
-            return ctx.message.author.id in constants.MODERATOR_LIST
-        return commands.check(predicate)
-    
+    @is_admin()
+    @commands.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
+    async def bonus_add(self, ctx, event_name: str, tag: str):
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
+        self.settings.minievents.insert(len(self.settings.minievents), Bonus(event_name, tag))
+
+        settings_saved = self.settings.save_settings()
+        saved = 'Saved successfully' if settings_saved else 'Failed to save!'
+        embed.set_author(name=f'Added bonus: {event_name}.\n{saved}')
+        
+        await ctx.send(embed=embed)
+
+    @is_admin()
+    @commands.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
+    async def bonus_delete(self, ctx):
+        embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
+        settings_saved = self.settings.save_settings()
+        saved = 'Saved successfully' if settings_saved else 'Failed to save!'
+        embed.set_author(name=f'Deleted: {len(self.settings.minievents)} bonus.\n{saved}')
+        self.settings.minievents.clear() 
+
+        await ctx.send(embed=embed)
+
     @is_admin()
     @commands.command(name='start', help='Starts ping reminders')
     async def start(self, ctx):
