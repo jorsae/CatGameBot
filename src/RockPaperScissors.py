@@ -41,7 +41,7 @@ def profile(author):
         return embed
     except DoesNotExist:
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL, title=f'{str(author.name)} Profile')
-        embed.add_field(name=f'You have not played any games!', value=f'"{constants.PREFIX}rps help" to get started')
+        embed.add_field(name=f'You have not played any games!', value=f'"{constants.DEFAULT_PREFIX}rps help" to get started')
         return embed
     except Exception as e:
         logging.critical(f'RockPaperScissors.profile: {e}')

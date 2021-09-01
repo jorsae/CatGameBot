@@ -80,3 +80,14 @@ def clean_number_input(number):
         except:
             return None
     return numbers
+
+# Get a commands aliases
+def get_aliases(aliases):
+    if aliases == []:
+        return ''
+    else:
+        output = ' | ('
+        for alias in aliases:
+            output += f'{alias}, '
+        output = output[:-2]
+        return f'{output})'

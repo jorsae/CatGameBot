@@ -7,58 +7,14 @@ from datetime import datetime, timedelta
 from discord.ext import commands as discord_commands
 
 from settings import Settings
-from AdminCog import AdminCog
+from cogs import *
 import RockPaperScissors
-import commands
 import utility
 import constants
 
 settings = Settings('../settings.json')
 bot = discord_commands.Bot(command_prefix=constants.DEFAULT_PREFIX)
 bot.remove_command('help')
-
-@bot.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
-async def next(ctx, iterations: str="3"):
-    next_embed = commands.next(ctx, settings, iterations)
-    await ctx.send(embed=next_embed)
-
-@bot.command(name='event', help='Lists current event times')
-async def list_events(ctx):
-    event_embed = commands.list_events(ctx, settings)
-    await ctx.send(embed=event_embed)
-
-@bot.command(name='time', aliases=['daily'], help='Lists the time till daily reset')
-async def time(ctx):
-    time_embed = commands.time(ctx)
-    await ctx.send(embed=time_embed)
-
-@bot.command(name='calculator', aliases=['calc'], help='Cat Game Calculator to help you craft')
-async def calculator(ctx):
-    await ctx.send(f'Visit https://CatGameCalculator.com to help your crafting needs')
-
-@bot.command(name='rps', help='Rock paper scissors mini game. !rps help for more details!')
-async def rps(ctx, selection: str='help'):
-    selection = selection.lower()
-    embed = None
-    if selection == 'help':
-        embed = RockPaperScissors.help(settings)
-    elif selection == 'rank' or selection == 'ranks':
-        embed = RockPaperScissors.rank()
-    elif selection == 'profile':
-        embed = RockPaperScissors.profile(ctx.message.author)
-    else:
-        embed = RockPaperScissors.game(ctx.message.author, selection)
-    await ctx.send(embed=embed)
-
-@bot.command(name='ping', help='CatGameBot speed test')
-async def ping(ctx):
-    ms = round(bot.latency, 3)
-    await ctx.send(f'Pong! {ms} sec')
-
-@bot.command(name='help', help='Displays this help message')
-async def help(ctx):
-    help_embed = commands.help(ctx, settings, bot)
-    await ctx.send(embed=help_embed)
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -136,7 +92,9 @@ if __name__ == '__main__':
     bot.command_prefix = settings.prefix
     RockPaperScissors.setup_database()
     
-    bot.add_cog(AdminCog(bot, settings))
+    bot.add_cog(General(bot, settings))
+    bot.add_cog(Moderator(bot, settings))
+    bot.add_cog(Admin(bot, settings))
 
     bot.loop.create_task(do_tasks())
     bot.run(settings.token)
