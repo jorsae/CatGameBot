@@ -27,7 +27,7 @@ class Moderator(commands.Cog):
         return commands.check(predicate)
     
     @is_moderator()
-    @commands.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
+    @commands.command(name='addevent', help='Adds a new mini event.\nExample: `!addevent yyyy-mm-dd yyyy-mm-dd`')
     async def add_event(self, ctx, start, stop):
         # Syntax: !addevent 2020-10-06 2020-16-06
         try:
@@ -46,7 +46,7 @@ class Moderator(commands.Cog):
             await ctx.send('Failed to add event time')
 
     @is_moderator()
-    @commands.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3 2, deletes event nr. 3 and 2', hidden=True)
+    @commands.command(name='delevent', help='Deletes a mini event. optional arg: number.\nExample: `!delevent 3 2`, deletes event nr. 3 and 2')
     async def delete_event(self, ctx, *number):
         numbers = []
         if len(number) <= 0:
@@ -79,7 +79,7 @@ class Moderator(commands.Cog):
             await ctx.send(f'Failed to delete: {output}')
 
     @is_moderator()
-    @commands.command(name='bonus', help='Lists the full bonus schedule', hidden=True)
+    @commands.command(name='bonus', help='Lists the full bonus schedule')
     async def bonus_list(self, ctx):
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         embed.set_author(name=f'Current bonus order')

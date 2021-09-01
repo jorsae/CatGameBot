@@ -19,7 +19,7 @@ class Admin(commands.Cog):
         return commands.check(predicate)
     
     @is_admin()
-    @commands.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
+    @commands.command(name='addbonus', help='Adds a new bonus to the bonus schedule.\nExample: `!addbonus "1min crafting" @crafting`')
     async def bonus_add(self, ctx, event_name: str, tag: str):
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         self.settings.minievents.insert(len(self.settings.minievents), Bonus(event_name, tag))
@@ -31,7 +31,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
 
     @is_admin()
-    @commands.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
+    @commands.command(name='delbonus', help='Clears the bonus schedule')
     async def bonus_delete(self, ctx):
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         settings_saved = self.settings.save_settings()
@@ -53,7 +53,7 @@ class Admin(commands.Cog):
         await ctx.send('Bot was started successfully | 2')
     
     @is_admin()
-    @commands.command(name='stop', help='Stops ping reminders', hidden=True)
+    @commands.command(name='stop', help='Stops ping reminders')
     async def stop(self, ctx):
         self.settings.run_ping_reminder = False
         await ctx.send('Ping reminder stopped successfully')

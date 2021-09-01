@@ -15,7 +15,7 @@ class General(commands.Cog):
         self.bot = bot
         self.settings = settings
     
-    @commands.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: !next 5")
+    @commands.command(name='next', help="next <digit> will list the next <digit> events. Max is 9 events. e.g: `!next 5`")
     async def next(self, ctx, iterations: str="3"):
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
 
