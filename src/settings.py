@@ -35,6 +35,8 @@ class Settings():
             self.prefix = data.get("prefix")
             self.token = data.get("token")
             self.admin = data.get("admin")
+            constants.ADMIN_LIST = data.get("admin")
+            constants.MODERATOR_LIST = data.get("moderator")
             self.channel_reminder = data.get("channel_reminder")
             self.start_time = self.string_to_datetime(data.get("start_time"))
             self.start_event = int(data.get("start_event"))

@@ -72,24 +72,15 @@ class General(commands.Cog):
     @commands.command(name='event', help='Lists current event times')
     async def list_events(self, ctx):
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-        
-        author = ctx.message.author
-        is_admin = utility.is_admin(author, self.settings)
-        
         embed.set_author(name=f'Current events [utc]')
 
         now = datetime.utcnow()
         index = 0
         for event in self.settings.event_times:
-            name = 'Mini event'
-            if is_admin:
-                name = f'[{index}] {name}'
-                if event.end_time <= now:
-                    name = f'{name} | Finished'
-                embed.add_field(name=name, value=f'{event.start_time} - {event.end_time}', inline=False)
-            else:
-                if event.end_time > now:
-                    embed.add_field(name=name, value=f'{event.start_time} - {event.end_time}', inline=False)
+            name = f'{index}. Mini event'
+            if event.end_time <= now:
+                name = f'{name} | Finished'
+            embed.add_field(name=name, value=f'{event.start_time} - {event.end_time}', inline=False)
             index += 1
         await ctx.send(embed=embed)
 

@@ -26,12 +26,9 @@ class Moderator(commands.Cog):
             return ctx.message.author.id in constants.MODERATOR_LIST
         return commands.check(predicate)
     
+    @is_moderator()
     @commands.command(name='addevent', help='Adds a new mini event. Example: !addevent yyyy-mm-dd yyyy-mm-dd', hidden=True)
     async def add_event(self, ctx, start, stop):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         # Syntax: !addevent 2020-10-06 2020-16-06
         try:
             # Because it's parsed as aest, I have to remove 1day so it matches utc and therefore matches the in game times
@@ -48,12 +45,9 @@ class Moderator(commands.Cog):
             logging.warning(f'Failed to add event time: {start} - {stop}. Exception: {e}')
             await ctx.send('Failed to add event time')
 
+    @is_moderator()
     @commands.command(name='delevent', help='Deletes a mini event. optional arg: number. Example: !delevent 3 2, deletes event nr. 3 and 2', hidden=True)
     async def delete_event(self, ctx, *number):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         numbers = []
         if len(number) <= 0:
             for i in range(len(self.settings.event_times) - 1, -1 , -1):
@@ -84,24 +78,18 @@ class Moderator(commands.Cog):
             logging.error(f'{ctx.message.author} failed to delete: {output}')
             await ctx.send(f'Failed to delete: {output}')
 
+    @is_moderator()
     @commands.command(name='bonus', help='Lists the full bonus schedule', hidden=True)
     async def bonus_list(self, ctx):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         embed.set_author(name=f'Current bonus order')
         for bonus in self.settings.minievents:
             embed.add_field(name=bonus.event_name, value=f'{bonus.tag}', inline=False)
         await ctx.send(embed=embed)
 
+    @is_moderator()
     @commands.command(name='delbonus', help='Clears the bonus schedule', hidden=True)
     async def bonus_delete(self, ctx):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         settings_saved = self.settings.save_settings()
         saved = 'Saved successfully' if settings_saved else 'Failed to save!'
@@ -110,12 +98,9 @@ class Moderator(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @is_moderator()
     @commands.command(name='addbonus', help='Adds a new bonus to the bonus schedule. Example: !addbonus "1min crafting" <@&689721344455213139>', hidden=True)
     async def bonus_add(self, ctx, event_name: str, tag: str):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
         self.settings.minievents.insert(len(self.settings.minievents), Bonus(event_name, tag))
 

@@ -26,12 +26,9 @@ class Admin(commands.Cog):
             return ctx.message.author.id in constants.MODERATOR_LIST
         return commands.check(predicate)
     
+    @is_admin()
     @commands.command(name='start', help='Starts ping reminders')
     async def start(self, ctx):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         self.settings.run_ping_reminder = True
         if self.settings.is_running_ping_reminder is False:
             self.bot.loop.create_task(ping_reminder())
@@ -40,11 +37,16 @@ class Admin(commands.Cog):
         
         await ctx.send('Bot was started successfully | 2')
     
+    @is_admin()
     @commands.command(name='stop', help='Stops ping reminders', hidden=True)
     async def stop(self, ctx):
-        is_admin = utility.is_admin(ctx.message.author, self.settings)
-        if is_admin is False:
-            return
-        
         self.settings.run_ping_reminder = False
         await ctx.send('Ping reminder stopped successfully')
+    
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            return
+        
+        username = f'[{ctx.message.author.id}] {ctx.message.author.name}#{ctx.message.author.discriminator}'
+        logging.error(f'on_command_error {username}: {error}')
