@@ -130,7 +130,7 @@ class General(commands.Cog):
         cogs.append(self.bot.get_cog('Admin'))
 
         embed = discord.Embed(colour=constants.COLOUR_NEUTRAL)
-        embed.set_author(name=f'BMW Help')
+        embed.set_author(name=f'CatGameBot Help')
         for cog in cogs:
             for command in cog.walk_commands():
                 if await command.can_run(ctx):
