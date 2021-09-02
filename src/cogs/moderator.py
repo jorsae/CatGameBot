@@ -50,8 +50,10 @@ class Moderator(commands.Cog):
     async def delete_event(self, ctx, *number):
         numbers = []
         if len(number) <= 0:
+            now = datetime.utcnow()
             for i in range(len(self.settings.event_times) - 1, -1 , -1):
-                numbers.append(i)
+                if self.settings.event_times[i].end_time <= now:
+                    numbers.append(i)
         else:
             numbers = utility.clean_number_input(number) # TODO: Add this to utility
         
